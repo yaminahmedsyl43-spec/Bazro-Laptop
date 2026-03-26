@@ -272,6 +272,73 @@ tr:hover td{background:var(--surface2);}
 .empty span{font-size:12px;}
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* ════════════════════════════════
+   THERMAL PRINT STYLES — 80mm
+   Works with any thermal printer
+   set as default in browser print
+   ════════════════════════════════ */
+#thermal-print-frame{display:none;}
+
+@media print{
+  /* Hide everything except the thermal frame */
+  body > *{display:none !important;}
+  #thermal-print-frame{
+    display:block !important;
+    position:fixed;
+    inset:0;
+    background:#fff;
+    z-index:99999;
+  }
+
+  @page{
+    size:80mm auto;        /* 80mm wide, auto height */
+    margin:0mm;
+  }
+
+  .thermal-receipt{
+    width:72mm;            /* 80mm paper - 4mm margin each side */
+    margin:0 auto;
+    padding:3mm 0;
+    font-family:'Courier New',Courier,monospace;
+    font-size:9pt;
+    color:#000;
+    background:#fff;
+    line-height:1.4;
+  }
+
+  .th-center{text-align:center;}
+  .th-bold{font-weight:700;}
+  .th-big{font-size:13pt;font-weight:900;}
+  .th-med{font-size:10pt;font-weight:700;}
+  .th-small{font-size:7.5pt;color:#444;}
+  .th-hr{border:none;border-top:1px dashed #999;margin:2mm 0;}
+  .th-hr-solid{border:none;border-top:1px solid #000;margin:2mm 0;}
+  .th-row{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;}
+  .th-row .thl{flex:1;overflow:hidden;}
+  .th-row .thr{white-space:nowrap;font-weight:700;}
+  .th-item-name{font-size:8.5pt;}
+  .th-item-sub{font-size:7.5pt;color:#555;padding-left:2mm;}
+  .th-total-row{display:flex;justify-content:space-between;font-size:12pt;font-weight:900;padding:1mm 0;}
+  .th-spacer{height:3mm;}
+  .th-qr{display:flex;justify-content:center;margin:2mm 0;}
+  .th-qr canvas{width:22mm!important;height:22mm!important;}
+  .th-cut{text-align:center;font-size:7pt;color:#aaa;margin-top:3mm;letter-spacing:3px;}
+
+  /* Category header inside receipt */
+  .th-cat-header{
+    text-align:center;
+    font-size:8pt;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:1mm 0;
+    border-top:1px dashed #ccc;
+    border-bottom:1px dashed #ccc;
+    margin:1.5mm 0;
+    color:#333;
+  }
+}
 </style>
 </head>
 <body>
@@ -385,7 +452,8 @@ tr:hover td{background:var(--surface2);}
       <div class="sp"></div>
       <input type="date" id="eod-date" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);outline:none;font-size:12px;" oninput="recalcEOD()">
       <button class="bsm grn" onclick="saveEOD()">💾 Save Record</button>
-      <button class="bsm sec" onclick="printEOD()">🖨 Print / PDF</button>
+      <button class="bsm" onclick="thermalPrint('eod')" style="background:var(--accent3)">🖨 Print</button>
+      <button class="bsm sec" onclick="printEOD()">⬇ PDF</button>
     </div>
     <div id="eod-wrap">
 
@@ -604,9 +672,10 @@ tr:hover td{background:var(--surface2);}
     <h2>🧾 Receipt</h2>
     <div id="rec-c"></div>
     <canvas id="qrcanvas" style="display:block;margin:10px auto;border-radius:6px;"></canvas>
-    <div style="display:flex;gap:7px">
-      <button class="btn btn-p" onclick="dlPDF()" style="flex:1">⬇ Download PDF</button>
-      <button class="btn btn-s" onclick="closeMo('mo-rec')" style="flex:1">Done</button>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="thermalPrint('sale')" style="flex:1;min-width:120px">🖨 Print Receipt</button>
+      <button class="btn btn-s" onclick="dlPDF()" style="flex:1;min-width:120px">⬇ PDF</button>
+      <button class="btn btn-s" onclick="closeMo('mo-rec')" style="flex:1;min-width:80px">Done</button>
     </div>
   </div>
 </div>
@@ -644,11 +713,17 @@ tr:hover td{background:var(--surface2);}
     <button class="mclose" onclick="closeMo('mo-sale')">✕</button>
     <h2>🧾 Sale Detail</h2>
     <div id="sale-det"></div>
-    <div style="display:flex;gap:7px;margin-top:14px">
-      <button class="btn btn-p" onclick="dlPDF()" style="flex:1">⬇ Receipt PDF</button>
-      <button class="btn btn-s" onclick="closeMo('mo-sale')" style="flex:1">Close</button>
+    <div style="display:flex;gap:7px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="thermalPrint('sale')" style="flex:1;min-width:120px">🖨 Print</button>
+      <button class="btn btn-s" onclick="dlPDF()" style="flex:1;min-width:80px">⬇ PDF</button>
+      <button class="btn btn-s" onclick="closeMo('mo-sale')" style="flex:1;min-width:80px">Close</button>
     </div>
   </div>
+</div>
+
+<!-- THERMAL PRINT FRAME — populated by JS, shown only on print -->
+<div id="thermal-print-frame">
+  <div class="thermal-receipt" id="thermal-content"></div>
 </div>
 
 <div id="toasts" style="position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:6px;pointer-events:none;"></div>
@@ -1198,6 +1273,161 @@ function dlPDF(){
 }
 
 // ════════════════════════════════════════════════
+//  THERMAL PRINT  (80mm — browser print dialog)
+// ════════════════════════════════════════════════
+function thermalPrint(type){
+  const frame=document.getElementById('thermal-content');
+  if(type==='sale'){
+    const sale=db.sales.find(x=>x.id===curSaleId);
+    if(!sale){toast('No sale selected','error');return;}
+    frame.innerHTML=thermalBuildSale(sale);
+    // Draw QR into the canvas inside frame after it's in DOM
+    const canvas=frame.querySelector('#thermal-qr-canvas');
+    if(canvas) QR.draw(canvas,`BAZRO:${sale.id}`,120);
+  } else if(type==='eod'){
+    const vals=getEODValues();
+    frame.innerHTML=thermalBuildEOD(vals);
+  }
+  setTimeout(()=>window.print(),80);
+}
+
+function thermalBuildSale(sale){
+  const s=db.settings;
+  const sym=s.currency||'£';
+  const f=n=>`${sym}${Number(n).toFixed(2)}`;
+  const now=new Date(sale.date);
+  const dateStr=now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+  // Group items by category, sorted
+  const catMap={};
+  sale.items.forEach(it=>{
+    const p=db.products.find(x=>x.id===it.id);
+    const cat=(p&&p.category)||'General';
+    if(!catMap[cat])catMap[cat]=[];
+    catMap[cat].push(it);
+  });
+  const cats=Object.keys(catMap).sort();
+
+  let itemsHTML='';
+  if(cats.length>1){
+    // Multi-category: group with category headers
+    cats.forEach(cat=>{
+      itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
+      catMap[cat].forEach(it=>{
+        const lineTotal=f(it.price*it.qty);
+        itemsHTML+=`
+          <div class="th-row th-item-name">
+            <div class="thl">${it.emoji||''} ${it.name}</div>
+          </div>
+          <div class="th-row th-small">
+            <div class="thl th-item-sub">${it.qty} × ${f(it.price)}</div>
+            <div class="thr">${lineTotal}</div>
+          </div>`;
+      });
+    });
+  } else {
+    // Single category — no headers, plain list
+    sale.items.forEach(it=>{
+      const lineTotal=f(it.price*it.qty);
+      itemsHTML+=`
+        <div class="th-row th-item-name">
+          <div class="thl">${it.emoji||''} ${it.name}</div>
+        </div>
+        <div class="th-row th-small">
+          <div class="thl th-item-sub">${it.qty} × ${f(it.price)}</div>
+          <div class="thr">${lineTotal}</div>
+        </div>`;
+    });
+  }
+
+  return `
+    <!-- STORE HEADER -->
+    <div class="th-center th-big">${(s.name||'BAZRO').toUpperCase()}</div>
+    ${s.address?`<div class="th-center th-small">${s.address}</div>`:''}
+    ${s.phone?`<div class="th-center th-small">${s.phone}</div>`:''}
+    ${s.email?`<div class="th-center th-small">${s.email}</div>`:''}
+    ${s.vat?`<div class="th-center th-small">VAT: ${s.vat}</div>`:''}
+
+    <hr class="th-hr-solid">
+
+    <!-- RECEIPT META -->
+    <div class="th-row th-small"><div class="thl">Receipt #</div><div class="thr">${sale.id.replace('SALE-','')}</div></div>
+    <div class="th-row th-small"><div class="thl">Date</div><div class="thr">${dateStr}</div></div>
+    <div class="th-row th-small"><div class="thl">Payment</div><div class="thr">${sale.payMethod.toUpperCase()}</div></div>
+
+    <hr class="th-hr">
+
+    <!-- ITEMS (grouped by category) -->
+    ${itemsHTML}
+
+    <hr class="th-hr">
+
+    <!-- TOTALS -->
+    <div class="th-row"><div class="thl">Subtotal</div><div class="thr">${f(sale.subtotal)}</div></div>
+    ${sale.discPct>0?`<div class="th-row"><div class="thl">Discount ${sale.discPct}%</div><div class="thr">-${f(sale.discount)}</div></div>`:''}
+    <div class="th-row"><div class="thl">Tax ${s.tax||20}%</div><div class="thr">${f(sale.tax)}</div></div>
+
+    <hr class="th-hr-solid">
+    <div class="th-total-row"><span>TOTAL</span><span>${f(sale.total)}</span></div>
+    <hr class="th-hr-solid">
+
+    ${sale.payMethod==='cash'?`
+    <div class="th-row th-small"><div class="thl">Cash Tendered</div><div class="thr">${f(sale.total+sale.change)}</div></div>
+    <div class="th-row th-bold"><div class="thl">Change</div><div class="thr">${f(sale.change)}</div></div>
+    `:''}
+
+    <!-- QR CODE -->
+    <div class="th-spacer"></div>
+    <div class="th-qr"><canvas id="thermal-qr-canvas" width="120" height="120"></canvas></div>
+    <div class="th-center th-small">Scan to verify receipt</div>
+
+    <!-- FOOTER -->
+    <div class="th-spacer"></div>
+    ${s.footer?`<div class="th-center th-bold">${s.footer}</div>`:''}
+    <div class="th-spacer"></div>
+    <div class="th-cut">— — — — — — — — — —</div>
+  `;
+}
+
+function thermalBuildEOD(data){
+  const s=db.settings;
+  const sym=s.currency||'£';
+  const f=n=>`${sym}${Number(n).toFixed(2)}`;
+  const netNeg=data.net<0;
+  return `
+    <div class="th-center th-big">${(s.name||'BAZRO').toUpperCase()}</div>
+    <div class="th-center th-med">${data.date}</div>
+    ${s.address?`<div class="th-center th-small">${s.address}</div>`:''}
+
+    <hr class="th-hr-solid">
+
+    <div class="th-center th-small" style="letter-spacing:2px;text-transform:uppercase;margin-bottom:2mm">End of Day Summary</div>
+
+    <hr class="th-hr">
+
+    <div class="th-row"><div class="thl th-bold">Cash Sales:</div><div class="thr th-bold">${f(data.cash)}</div></div>
+    <div class="th-row"><div class="thl th-bold">Card Sales:</div><div class="thr th-bold">${f(data.card)}</div></div>
+    <div class="th-row"><div class="thl th-bold">Expenses:</div><div class="thr th-bold">- ${f(data.expenses)}</div></div>
+
+    <hr class="th-hr-solid">
+
+    <div class="th-total-row" style="${netNeg?'':''}">
+      <span>NET TOTAL:</span>
+      <span>${f(data.net)}</span>
+    </div>
+
+    <hr class="th-hr-solid">
+
+    <div class="th-spacer"></div>
+    <div class="th-row th-small"><div class="thl">Till Left:</div><div class="thr">${f(data.till)}</div></div>
+    ${data.notes?`<div class="th-spacer"></div><div class="th-small" style="text-align:left">Notes: ${data.notes}</div>`:''}
+
+    <div class="th-spacer"></div>
+    <div class="th-cut">— — — — — — — — — —</div>
+  `;
+}
+
+// ════════════════════════════════════════════════
 //  INVENTORY
 // ════════════════════════════════════════════════
 function renderInv(){
@@ -1440,6 +1670,7 @@ function renderEODHistory(){
       <div style="display:flex;align-items:center;gap:8px">
         <strong style="font-size:15px;font-family:monospace;color:${r.net>=0?'var(--accent)':'var(--danger)'}">${fmt(r.net)}</strong>
         <button class="bsm grn" onclick="loadEODRecord('${r.id}')" style="padding:5px 8px;font-size:11px">Load</button>
+        <button class="bsm" onclick="thermalPrintEODRecord('${r.id}')" style="padding:5px 8px;font-size:11px;background:var(--accent3)">🖨</button>
         <button class="bsm sec" onclick="printEODRecord('${r.id}')" style="padding:5px 8px;font-size:11px">PDF</button>
         <button class="bsm red" onclick="deleteEOD('${r.id}')" style="padding:5px 8px;font-size:11px">✕</button>
       </div>
@@ -1476,6 +1707,13 @@ function printEODRecord(id){
   const pdf=PDF.eodPDF(r,db.settings);
   PDF.dl(pdf,`eod-${r.dateRaw}.pdf`);
   toast('EOD PDF downloaded!');
+}
+function thermalPrintEODRecord(id){
+  const r=db.eodRecords.find(x=>x.id===id);if(!r)return;
+  const frame=document.getElementById('thermal-content');
+  frame.innerHTML=thermalBuildEOD(r);
+  setTimeout(()=>window.print(),80);
+  toast('Sending to printer…');
 }
 
 // ════════════════════════════════════════════════
