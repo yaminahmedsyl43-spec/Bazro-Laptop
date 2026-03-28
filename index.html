@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Bazro POS</title>
+<title>Flashpoint POS</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@400;600;700;800;900&family=Syne:wght@400;600;700;800&display=swap');
 :root{
   --bg:#0a0a0f;--surface:#111118;--surface2:#1a1a24;--border:#2a2a3a;
-  --accent:#00e5a0;--accent2:#7c5cfc;--text:#e8e8f0;--text2:#8888aa;
-  --danger:#ff4444;--warning:#ffb020;--radius:12px;
+  --accent:#00e5a0;--accent2:#7c5cfc;--brand:#ff8c00;--brand2:#ffb347;
+  --text:#e8e8f0;--text2:#8888aa;--danger:#ff4444;--warning:#ffb020;--radius:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Syne',sans-serif,system-ui;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
-button,input,select{font-family:inherit;}
+body{font-family:'Playfair Display','Syne',serif,system-ui;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+button,input,select{font-family:'Syne',sans-serif,system-ui;}
 
 /* ── LAYOUT ── */
 #app{display:flex;height:100vh;}
 #sidebar{width:210px;min-width:210px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;}
 .logo{padding:20px 18px 16px;border-bottom:1px solid var(--border);}
-.logo h1{font-size:26px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.logo p{font-size:9px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.logo h1{font-size:24px;font-weight:900;font-family:'Playfair Display',serif;background:linear-gradient(135deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:.5px;}
+.logo p{font-size:9px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-family:'Syne',sans-serif;}
 nav{flex:1;padding:10px 0;overflow-y:auto;}
 .nb{width:100%;background:none;border:none;border-left:3px solid transparent;color:var(--text2);font-size:13px;font-weight:600;padding:11px 18px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.15s;}
 .nb:hover{color:var(--text);background:var(--surface2);}
@@ -165,26 +165,26 @@ tr:hover td{background:var(--surface2);}
 .eod-till-value{font-size:16px;font-weight:700;font-family:monospace;color:var(--text2);}
 .eod-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
 
-/* EOD Receipt Preview */
-.eod-preview-panel{flex:1;min-width:280px;max-width:400px;}
-.eod-receipt{background:#fff;color:#000;border-radius:12px;padding:32px 28px;font-family:'Courier New',Courier,monospace;box-shadow:0 8px 40px rgba(0,0,0,.4);}
-.eod-receipt-title{text-align:center;margin-bottom:6px;}
-.eod-receipt-title h2{font-size:28px;font-weight:900;letter-spacing:1px;}
-.eod-receipt-date{text-align:center;font-size:14px;font-weight:700;margin-bottom:8px;}
-.eod-receipt-addr{text-align:center;font-size:12px;color:#666;margin-bottom:18px;}
-.eod-receipt-hr{border:none;border-top:1px solid #ccc;margin:12px 0;}
-.eod-receipt-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #ddd;}
-.eod-receipt-row:last-of-type{border-bottom:none;}
-.eod-receipt-row .rl{font-size:14px;font-weight:700;}
-.eod-receipt-row .rv{font-size:14px;font-weight:700;}
-.eod-receipt-row .rv.neg{color:#c00;}
-.eod-receipt-total-hr{border:none;border-top:2px solid #999;margin:14px 0 6px;}
-.eod-receipt-net{display:flex;justify-content:space-between;padding:8px 0;}
-.eod-receipt-net .rl{font-size:18px;font-weight:900;}
-.eod-receipt-net .rv{font-size:18px;font-weight:900;}
-.eod-receipt-till{display:flex;justify-content:space-between;padding:10px 0 0;}
-.eod-receipt-till .rl{font-size:13px;color:#888;font-weight:600;}
-.eod-receipt-till .rv{font-size:13px;color:#888;font-weight:600;}
+/* EOD Receipt Preview — redesigned to match reference image */
+.eod-preview-panel{flex:1;min-width:280px;max-width:420px;}
+.eod-receipt{background:#fff;color:#000;border-radius:16px;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif;box-shadow:0 12px 48px rgba(0,0,0,.5);}
+/* Dark header banner with gold store name */
+.eod-receipt-header{background:#0d1b2a;padding:28px 24px;text-align:center;}
+.eod-receipt-header h2{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;margin:0;}
+/* Body */
+.eod-receipt-body{padding:24px 28px;}
+.eod-receipt-date{font-size:14px;font-weight:700;text-align:center;margin-bottom:22px;color:#222;letter-spacing:.5px;}
+.eod-receipt-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px dashed #ddd;}
+.eod-receipt-row .rl{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111;}
+.eod-receipt-row .rv{font-size:14px;font-weight:600;color:#111;}
+.eod-receipt-row .rv.neg{color:#cc0000;}
+.eod-receipt-total-hr{border:none;border-top:2px solid #111;margin:18px 0 6px;}
+.eod-receipt-net{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0 16px;}
+.eod-receipt-net .rl{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;}
+.eod-receipt-net .rv{font-size:20px;font-weight:900;}
+.eod-receipt-till{display:flex;justify-content:space-between;padding:12px 0 0;border-top:1px solid #eee;}
+.eod-receipt-till .rl{font-size:13px;color:#666;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.eod-receipt-till .rv{font-size:13px;color:#666;font-weight:700;}
 
 /* ── SETTINGS ── */
 #pg-set{flex-direction:column;}
@@ -292,51 +292,49 @@ tr:hover td{background:var(--surface2);}
   }
 
   @page{
-    size:80mm auto;        /* 80mm wide, auto height */
-    margin:0mm;
+    size:80mm auto;
+    margin:4mm 4mm;
   }
 
   .thermal-receipt{
-    width:72mm;            /* 80mm paper - 4mm margin each side */
-    margin:0 auto;
-    padding:3mm 0;
+    width:100%;
     font-family:'Courier New',Courier,monospace;
     font-size:9pt;
     color:#000;
     background:#fff;
-    line-height:1.4;
+    line-height:1.45;
+  }
+
+  /* Tables used for guaranteed alignment */
+  .thermal-receipt table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+  .thermal-receipt table td:last-child{
+    text-align:right;
+    white-space:nowrap;
+    width:28mm;
   }
 
   .th-center{text-align:center;}
   .th-bold{font-weight:700;}
-  .th-big{font-size:13pt;font-weight:900;}
+  .th-big{font-size:14pt;font-weight:900;text-align:center;display:block;margin-bottom:1mm;}
   .th-med{font-size:10pt;font-weight:700;}
-  .th-small{font-size:7.5pt;color:#444;}
-  .th-hr{border:none;border-top:1px dashed #999;margin:2mm 0;}
-  .th-hr-solid{border:none;border-top:1px solid #000;margin:2mm 0;}
-  .th-row{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;}
-  .th-row .thl{flex:1;overflow:hidden;}
-  .th-row .thr{white-space:nowrap;font-weight:700;}
-  .th-item-name{font-size:8.5pt;}
-  .th-item-sub{font-size:7.5pt;color:#555;padding-left:2mm;}
-  .th-total-row{display:flex;justify-content:space-between;font-size:12pt;font-weight:900;padding:1mm 0;}
-  .th-spacer{height:3mm;}
-  .th-qr{display:flex;justify-content:center;margin:2mm 0;}
-  .th-qr canvas{width:22mm!important;height:22mm!important;}
-  .th-cut{text-align:center;font-size:7pt;color:#aaa;margin-top:3mm;letter-spacing:3px;}
+  .th-small{font-size:7.5pt;color:#333;display:block;text-align:center;}
+  .th-hr{border:none;border-top:1px dashed #888;margin:2.5mm 0;display:block;}
+  .th-hr-solid{border:none;border-top:1.5px solid #000;margin:2.5mm 0;display:block;}
+  .th-item-name{font-size:8.5pt;display:block;}
+  .th-item-sub{font-size:7.5pt;color:#444;padding-left:2mm;}
+  .th-spacer{height:3mm;display:block;}
+  .th-cut{text-align:center;font-size:7pt;color:#999;margin-top:3mm;display:block;}
 
-  /* Category header inside receipt */
   .th-cat-header{
-    text-align:center;
-    font-size:8pt;
-    font-weight:700;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    padding:1mm 0;
-    border-top:1px dashed #ccc;
-    border-bottom:1px dashed #ccc;
-    margin:1.5mm 0;
-    color:#333;
+    text-align:center;font-size:8pt;font-weight:700;
+    letter-spacing:1px;text-transform:uppercase;
+    padding:1.5mm 0;margin:2mm 0;
+    border-top:1px dashed #aaa;border-bottom:1px dashed #aaa;
+    color:#333;display:block;
   }
 }
 </style>
@@ -347,7 +345,7 @@ tr:hover td{background:var(--surface2);}
 <!-- ══ SIDEBAR ══ -->
 <aside id="sidebar">
   <div class="logo">
-    <h1>Bazro</h1>
+    <h1>Flashpoint</h1>
     <p>Point of Sale</p>
   </div>
   <nav>
@@ -514,33 +512,36 @@ tr:hover td{background:var(--surface2);}
 
       <!-- Live Receipt Preview -->
       <div class="eod-preview-panel">
-        <div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">📄 Preview</div>
+        <div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-family:'Syne',sans-serif;">📄 Live Preview</div>
         <div class="eod-receipt" id="eod-receipt-preview">
-          <div class="eod-receipt-title"><h2 id="pr-name">BAZRO</h2></div>
-          <div class="eod-receipt-date" id="pr-date">--/--/----</div>
-          <div class="eod-receipt-addr" id="pr-addr"></div>
-          <hr class="eod-receipt-hr">
-          <div class="eod-receipt-row">
-            <span class="rl">Cash Sales:</span>
-            <span class="rv" id="pr-cash">£0.00</span>
+          <!-- Dark header banner -->
+          <div class="eod-receipt-header">
+            <h2 id="pr-name">FLASHPOINT</h2>
           </div>
-          <div class="eod-receipt-row">
-            <span class="rl">Card Sales:</span>
-            <span class="rv" id="pr-card">£0.00</span>
-          </div>
-          <div class="eod-receipt-row">
-            <span class="rl">Expenses:</span>
-            <span class="rv neg" id="pr-exp">- £0.00</span>
-          </div>
-          <hr class="eod-receipt-total-hr">
-          <div class="eod-receipt-net">
-            <span class="rl">NET TOTAL:</span>
-            <span class="rv" id="pr-net">£0.00</span>
-          </div>
-          <hr class="eod-receipt-hr">
-          <div class="eod-receipt-till">
-            <span class="rl">Till Left:</span>
-            <span class="rv" id="pr-till">£0.00</span>
+          <!-- Body -->
+          <div class="eod-receipt-body">
+            <div class="eod-receipt-date" id="pr-date">DATE: --/--/----</div>
+            <div class="eod-receipt-row">
+              <span class="rl">Cash Sales:</span>
+              <span class="rv" id="pr-cash">£0.00</span>
+            </div>
+            <div class="eod-receipt-row">
+              <span class="rl">Card Sales:</span>
+              <span class="rv" id="pr-card">£0.00</span>
+            </div>
+            <div class="eod-receipt-row" style="border-bottom:none">
+              <span class="rl">Expenses:</span>
+              <span class="rv neg" id="pr-exp">£0.00</span>
+            </div>
+            <div class="eod-receipt-total-hr"></div>
+            <div class="eod-receipt-net">
+              <span class="rl">Total:</span>
+              <span class="rv" id="pr-net">£0.00</span>
+            </div>
+            <div class="eod-receipt-till">
+              <span class="rl">Till Left:</span>
+              <span class="rv" id="pr-till">£0.00</span>
+            </div>
           </div>
         </div>
       </div>
@@ -558,7 +559,7 @@ tr:hover td{background:var(--surface2);}
     <div id="set-c">
       <div class="ss">
         <h3>🏪 Store</h3>
-        <div class="fr"><label>Store Name</label><input id="sn" placeholder="Bazro Store"></div>
+        <div class="fr"><label>Store Name</label><input id="sn" placeholder="Flashpoint"></div>
         <div class="fr"><label>Address</label><input id="sa"></div>
         <div class="fr"><label>Phone</label><input id="sph"></div>
         <div class="fr"><label>Email</label><input id="sem"></div>
@@ -671,7 +672,6 @@ tr:hover td{background:var(--surface2);}
     <button class="mclose" onclick="closeMo('mo-rec')">✕</button>
     <h2>🧾 Receipt</h2>
     <div id="rec-c"></div>
-    <canvas id="qrcanvas" style="display:block;margin:10px auto;border-radius:6px;"></canvas>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
       <button class="btn btn-p" onclick="thermalPrint('sale')" style="flex:1;min-width:120px">🖨 Print Receipt</button>
       <button class="btn btn-s" onclick="dlPDF()" style="flex:1;min-width:120px">⬇ PDF</button>
@@ -813,7 +813,7 @@ const PDF=(function(){
     const fmt=n=>`${C}${Number(n).toFixed(2)}`;
     let y=30;
     const center=(t,s,bold)=>p.text(t,Math.max(4,(p.W-t.length*s*0.6)/2),y,s,bold);
-    center(settings.name||'Bazro',10,true);y+=14;
+    center(settings.name||'Flashpoint',10,true);y+=14;
     if(settings.address){center(settings.address,7,false);y+=10;}
     if(settings.phone){center(settings.phone,7,false);y+=10;}
     if(settings.vat){center('VAT: '+settings.vat,7,false);y+=10;}
@@ -844,7 +844,7 @@ const PDF=(function(){
     let y=30;
     const center=(t,s,bold)=>p.text(t,Math.max(4,(p.W-t.length*s*0.6)/2),y,s,bold);
     const lr=(l,r,s,bold)=>{p.text(l,8,y,s,bold);p.text(r,p.W-8-String(r).length*s*0.6,y,s,bold);};
-    center(settings.name||'BAZRO',12,true);y+=16;
+    center(settings.name||'FLASHPOINT',12,true);y+=16;
     center(data.date,9,true);y+=12;
     if(settings.address){center(settings.address,7,false);y+=10;}
     p.line(8,y,p.W-8,y);y+=10;
@@ -879,7 +879,7 @@ let curSaleId=null;
 let stream=null,torchOn=false,detector=null,scanLoop=null,scanMode='checkout';
 let siProdId=null,siDelta=0,foundId=null;
 
-const DEF={name:'Bazro Store',address:'123 High Street',phone:'+44 20 0000 0000',email:'hello@bazro.com',vat:'GB123456789',footer:'Thank you!',currency:'£',tax:20};
+const DEF={name:'Flashpoint',address:'',phone:'',email:'',vat:'',footer:'Thank you!',currency:'£',tax:20};
 const SAMPLES=[
   {id:'p1',name:'Organic Milk 1L',price:1.29,cost:.60,stock:24,lowStock:5,category:'Dairy',barcode:'5012345600001',emoji:'🥛'},
   {id:'p2',name:'Sourdough Bread',price:2.49,cost:1.10,stock:8,lowStock:3,category:'Bakery',barcode:'5012345600002',emoji:'🍞'},
@@ -1229,7 +1229,7 @@ function completeSale(){
     const t=parseFloat(document.getElementById('cashamt').value)||0;
     if(t<total){toast('Cash less than total','error');return;}
   }
-  const id='SALE-'+Date.now();
+  const id='REC-'+String(Date.now()).slice(-8);
   const sale={id,date:new Date().toISOString(),items:basket.map(b=>({...b})),
     subtotal:sub,discount:disc,discPct:dp,tax:taxAmt,total,payMethod,
     change:payMethod==='cash'?(parseFloat(document.getElementById('cashamt').value)||0)-total:0};
@@ -1249,7 +1249,7 @@ function showReceipt(sale){
   const s=db.settings;
   const lines=sale.items.map(it=>`<div class="rr"><span>${it.emoji} ${it.name} ×${it.qty}</span><span>${fmt(it.price*it.qty)}</span></div>`).join('');
   document.getElementById('rec-c').innerHTML=`
-    <div class="rh"><h2>${s.name||'Bazro'}</h2><p>${s.address||''}</p><p>${s.phone||''}</p>${s.vat?`<p>VAT: ${s.vat}</p>`:''}</div>
+    <div class="rh"><h2>${s.name||'Flashpoint'}</h2><p>${s.address||''}</p><p>${s.phone||''}</p>${s.vat?`<p>VAT: ${s.vat}</p>`:''}</div>
     <hr class="rdiv">
     <div class="rr"><span>Receipt #</span><span>${sale.id}</span></div>
     <div class="rr"><span>Date</span><span>${new Date(sale.date).toLocaleString('en-GB')}</span></div>
@@ -1261,8 +1261,6 @@ function showReceipt(sale){
     <div class="rr rt"><span>TOTAL</span><span>${fmt(sale.total)}</span></div>
     ${sale.payMethod==='cash'?`<div class="rr"><span>Change</span><span>${fmt(sale.change)}</span></div>`:''}
     <hr class="rdiv"><p style="text-align:center;margin-top:6px">${s.footer||'Thank you!'}</p>`;
-  const canvas=document.getElementById('qrcanvas');
-  QR.draw(canvas,`BAZRO:${sale.id}`,120);
   document.getElementById('mo-rec').classList.add('on');
 }
 function dlPDF(){
@@ -1281,9 +1279,6 @@ function thermalPrint(type){
     const sale=db.sales.find(x=>x.id===curSaleId);
     if(!sale){toast('No sale selected','error');return;}
     frame.innerHTML=thermalBuildSale(sale);
-    // Draw QR into the canvas inside frame after it's in DOM
-    const canvas=frame.querySelector('#thermal-qr-canvas');
-    if(canvas) QR.draw(canvas,`BAZRO:${sale.id}`,120);
   } else if(type==='eod'){
     const vals=getEODValues();
     frame.innerHTML=thermalBuildEOD(vals);
@@ -1296,9 +1291,15 @@ function thermalBuildSale(sale){
   const sym=s.currency||'£';
   const f=n=>`${sym}${Number(n).toFixed(2)}`;
   const now=new Date(sale.date);
-  const dateStr=now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const dd=String(now.getDate()).padStart(2,'0');
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  const yyyy=now.getFullYear();
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mi=String(now.getMinutes()).padStart(2,'0');
+  const dateStr=`${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+  const receiptNum=sale.id.replace('REC-','').replace('SALE-','');
 
-  // Group items by category, sorted
+  // Group items by category
   const catMap={};
   sale.items.forEach(it=>{
     const p=db.products.find(x=>x.id===it.id);
@@ -1307,85 +1308,52 @@ function thermalBuildSale(sale){
     catMap[cat].push(it);
   });
   const cats=Object.keys(catMap).sort();
+  const multiCat=cats.length>1;
 
   let itemsHTML='';
-  if(cats.length>1){
-    // Multi-category: group with category headers
-    cats.forEach(cat=>{
-      itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
-      catMap[cat].forEach(it=>{
-        const lineTotal=f(it.price*it.qty);
-        itemsHTML+=`
-          <div class="th-row th-item-name">
-            <div class="thl">${it.emoji||''} ${it.name}</div>
-          </div>
-          <div class="th-row th-small">
-            <div class="thl th-item-sub">${it.qty} × ${f(it.price)}</div>
-            <div class="thr">${lineTotal}</div>
-          </div>`;
-      });
+  cats.forEach(cat=>{
+    if(multiCat) itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
+    catMap[cat].forEach(it=>{
+      itemsHTML+=`<div style="margin:2mm 0 0.5mm;font-size:9pt">${it.name}</div>`;
+      itemsHTML+=`<table style="width:100%;border-collapse:collapse;font-size:8.5pt"><tr><td>${it.qty} &times; ${f(it.price)}</td><td style="text-align:right;white-space:nowrap">${f(it.price*it.qty)}</td></tr></table>`;
     });
-  } else {
-    // Single category — no headers, plain list
-    sale.items.forEach(it=>{
-      const lineTotal=f(it.price*it.qty);
-      itemsHTML+=`
-        <div class="th-row th-item-name">
-          <div class="thl">${it.emoji||''} ${it.name}</div>
-        </div>
-        <div class="th-row th-small">
-          <div class="thl th-item-sub">${it.qty} × ${f(it.price)}</div>
-          <div class="thr">${lineTotal}</div>
-        </div>`;
-    });
-  }
+  });
+
+  // Use HTML table for totals — guaranteed alignment on thermal
+  const trow=(l,r,bold=false)=>`<tr${bold?' style="font-weight:700"':''}><td style="padding:1mm 0">${l}</td><td style="text-align:right;white-space:nowrap;padding:1mm 0">${r}</td></tr>`;
 
   return `
-    <!-- STORE HEADER -->
-    <div class="th-center th-big">${(s.name||'BAZRO').toUpperCase()}</div>
-    ${s.address?`<div class="th-center th-small">${s.address}</div>`:''}
+    <div class="th-center th-big">${(s.name||'FLASHPOINT').toUpperCase()}</div>
+    ${s.address?`<div class="th-center th-small" style="margin-top:1mm">${s.address}</div>`:''}
     ${s.phone?`<div class="th-center th-small">${s.phone}</div>`:''}
-    ${s.email?`<div class="th-center th-small">${s.email}</div>`:''}
     ${s.vat?`<div class="th-center th-small">VAT: ${s.vat}</div>`:''}
-
-    <hr class="th-hr-solid">
-
-    <!-- RECEIPT META -->
-    <div class="th-row th-small"><div class="thl">Receipt #</div><div class="thr">${sale.id.replace('SALE-','')}</div></div>
-    <div class="th-row th-small"><div class="thl">Date</div><div class="thr">${dateStr}</div></div>
-    <div class="th-row th-small"><div class="thl">Payment</div><div class="thr">${sale.payMethod.toUpperCase()}</div></div>
-
-    <hr class="th-hr">
-
-    <!-- ITEMS (grouped by category) -->
+    <hr class="th-hr-solid" style="margin:3mm 0">
+    <table style="width:100%;border-collapse:collapse;font-size:8.5pt">
+      ${trow('Receipt #', receiptNum)}
+      ${trow('Date', dateStr)}
+      ${trow('Payment', sale.payMethod.toUpperCase())}
+    </table>
+    <hr class="th-hr" style="margin:2mm 0">
     ${itemsHTML}
-
-    <hr class="th-hr">
-
-    <!-- TOTALS -->
-    <div class="th-row"><div class="thl">Subtotal</div><div class="thr">${f(sale.subtotal)}</div></div>
-    ${sale.discPct>0?`<div class="th-row"><div class="thl">Discount ${sale.discPct}%</div><div class="thr">-${f(sale.discount)}</div></div>`:''}
-    <div class="th-row"><div class="thl">Tax ${s.tax||20}%</div><div class="thr">${f(sale.tax)}</div></div>
-
-    <hr class="th-hr-solid">
-    <div class="th-total-row"><span>TOTAL</span><span>${f(sale.total)}</span></div>
-    <hr class="th-hr-solid">
-
-    ${sale.payMethod==='cash'?`
-    <div class="th-row th-small"><div class="thl">Cash Tendered</div><div class="thr">${f(sale.total+sale.change)}</div></div>
-    <div class="th-row th-bold"><div class="thl">Change</div><div class="thr">${f(sale.change)}</div></div>
-    `:''}
-
-    <!-- QR CODE -->
+    <hr class="th-hr" style="margin:2mm 0">
+    <table style="width:100%;border-collapse:collapse;font-size:8.5pt">
+      ${trow('Subtotal', f(sale.subtotal))}
+      ${sale.discPct>0?trow(`Discount ${sale.discPct}%`,`-${f(sale.discount)}`):''}
+      ${trow(`Tax ${s.tax||20}%`, f(sale.tax))}
+    </table>
+    <hr class="th-hr-solid" style="margin:2mm 0">
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="font-size:13pt;font-weight:900"><td>TOTAL</td><td style="text-align:right;white-space:nowrap">${f(sale.total)}</td></tr>
+    </table>
+    <hr class="th-hr-solid" style="margin:2mm 0">
+    ${sale.payMethod==='cash'?`<table style="width:100%;border-collapse:collapse;font-size:8.5pt">
+      ${trow('Cash Tendered', f(sale.total+sale.change))}
+      ${trow('Change', f(sale.change), true)}
+    </table>`:''}
     <div class="th-spacer"></div>
-    <div class="th-qr"><canvas id="thermal-qr-canvas" width="120" height="120"></canvas></div>
-    <div class="th-center th-small">Scan to verify receipt</div>
-
-    <!-- FOOTER -->
+    <div class="th-center th-bold" style="margin-top:3mm">${s.footer||'Thank you!'}</div>
     <div class="th-spacer"></div>
-    ${s.footer?`<div class="th-center th-bold">${s.footer}</div>`:''}
-    <div class="th-spacer"></div>
-    <div class="th-cut">— — — — — — — — — —</div>
+    <div class="th-cut">- - - - - - - - - - - - - - -</div>
   `;
 }
 
@@ -1393,34 +1361,38 @@ function thermalBuildEOD(data){
   const s=db.settings;
   const sym=s.currency||'£';
   const f=n=>`${sym}${Number(n).toFixed(2)}`;
-  const netNeg=data.net<0;
+  const storeName=(s.name||'FLASHPOINT').toUpperCase();
+  // date comes in as dd/mm/yyyy already from fmtDateDMY
+  const displayDate=data.date||'—';
   return `
-    <div class="th-center th-big">${(s.name||'BAZRO').toUpperCase()}</div>
-    <div class="th-center th-med">${data.date}</div>
+    <!-- Dark header banner matching receipt image -->
+    <div style="background:#0d1b2a;padding:18px 12px;text-align:center;border-radius:4px 4px 0 0;margin-bottom:8px;">
+      <div style="font-family:'Playfair Display',serif;font-size:16pt;font-weight:900;color:#c9a84c;letter-spacing:3px;">${storeName}</div>
+    </div>
+
+    <div class="th-center th-bold" style="font-size:9pt;margin-bottom:1mm">DATE: ${displayDate}</div>
     ${s.address?`<div class="th-center th-small">${s.address}</div>`:''}
 
     <hr class="th-hr-solid">
 
-    <div class="th-center th-small" style="letter-spacing:2px;text-transform:uppercase;margin-bottom:2mm">End of Day Summary</div>
-
+    <div class="th-row"><div class="thl th-bold">CASH SALES:</div><div class="thr">${f(data.cash)}</div></div>
     <hr class="th-hr">
-
-    <div class="th-row"><div class="thl th-bold">Cash Sales:</div><div class="thr th-bold">${f(data.cash)}</div></div>
-    <div class="th-row"><div class="thl th-bold">Card Sales:</div><div class="thr th-bold">${f(data.card)}</div></div>
-    <div class="th-row"><div class="thl th-bold">Expenses:</div><div class="thr th-bold">- ${f(data.expenses)}</div></div>
+    <div class="th-row"><div class="thl th-bold">CARD SALES:</div><div class="thr">${f(data.card)}</div></div>
+    <hr class="th-hr">
+    <div class="th-row"><div class="thl th-bold">EXPENSES:</div><div class="thr">${data.expenses>0?`- ${f(data.expenses)}`:f(0)}</div></div>
 
     <hr class="th-hr-solid">
 
-    <div class="th-total-row" style="${netNeg?'':''}">
-      <span>NET TOTAL:</span>
+    <div class="th-total-row">
+      <span>TOTAL:</span>
       <span>${f(data.net)}</span>
     </div>
 
     <hr class="th-hr-solid">
 
     <div class="th-spacer"></div>
-    <div class="th-row th-small"><div class="thl">Till Left:</div><div class="thr">${f(data.till)}</div></div>
-    ${data.notes?`<div class="th-spacer"></div><div class="th-small" style="text-align:left">Notes: ${data.notes}</div>`:''}
+    <div class="th-row"><div class="thl th-bold">TILL LEFT:</div><div class="thr">${f(data.till)}</div></div>
+    ${data.notes?`<div class="th-spacer"></div><div class="th-small">Notes: ${data.notes}</div>`:''}
 
     <div class="th-spacer"></div>
     <div class="th-cut">— — — — — — — — — —</div>
@@ -1580,7 +1552,7 @@ function exportReport(){
   const now=new Date();
   const todaySales=db.sales.filter(x=>new Date(x.date).toDateString()===now.toDateString());
   const rev=todaySales.reduce((s,x)=>s+x.total,0);
-  let txt=`${db.settings.name||'BAZRO'} - REPORT\n${now.toLocaleDateString('en-GB')}\n\nTransactions: ${todaySales.length}\nRevenue: ${fmt(rev)}\n\n`;
+  let txt=`${db.settings.name||'FLASHPOINT'} - REPORT\n${now.toLocaleDateString('en-GB')}\n\nTransactions: ${todaySales.length}\nRevenue: ${fmt(rev)}\n\n`;
   todaySales.forEach(s=>{txt+=`${s.id}  ${new Date(s.date).toLocaleTimeString('en-GB')}  ${s.payMethod.toUpperCase()}  ${fmt(s.total)}\n`;});
   const blob=new Blob([txt],{type:'text/plain'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
@@ -1606,6 +1578,14 @@ function initEOD(){
   recalcEOD();
 }
 
+function fmtDateDMY(dateRaw){
+  if(!dateRaw) return '—';
+  // dateRaw is yyyy-mm-dd from input[type=date]
+  const parts=dateRaw.split('-');
+  if(parts.length===3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return dateRaw;
+}
+
 function getEODValues(){
   const cash=parseFloat(document.getElementById('eod-cash').value)||0;
   const card=parseFloat(document.getElementById('eod-card').value)||0;
@@ -1613,7 +1593,7 @@ function getEODValues(){
   const till=parseFloat(document.getElementById('eod-till').value)||0;
   const net=cash+card-expenses;
   const dateRaw=document.getElementById('eod-date').value;
-  const date=dateRaw?new Date(dateRaw).toLocaleDateString('en-GB'):'—';
+  const date=fmtDateDMY(dateRaw);
   return{cash,card,expenses,till,net,date,dateRaw};
 }
 
@@ -1623,14 +1603,13 @@ function recalcEOD(){
   const f=n=>`${sym}${Number(n).toFixed(2)}`;
 
   // Update preview receipt
-  document.getElementById('pr-name').textContent=(db.settings.name||'BAZRO').toUpperCase();
-  document.getElementById('pr-date').textContent=date;
-  document.getElementById('pr-addr').textContent=db.settings.address||'';
+  document.getElementById('pr-name').textContent=(db.settings.name||'FLASHPOINT').toUpperCase();
+  document.getElementById('pr-date').textContent=`DATE: ${date}`;
   document.getElementById('pr-cash').textContent=f(cash);
   document.getElementById('pr-card').textContent=f(card);
-  document.getElementById('pr-exp').textContent=`- ${f(expenses)}`;
+  document.getElementById('pr-exp').textContent=expenses>0?`- ${f(expenses)}`:f(0);
   document.getElementById('pr-net').textContent=f(net);
-  document.getElementById('pr-net').style.color=net<0?'#c00':'#000';
+  document.getElementById('pr-net').style.color=net<0?'#cc0000':'#000';
   document.getElementById('pr-till').textContent=f(till);
 }
 
