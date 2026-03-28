@@ -272,117 +272,137 @@ tr:hover td{background:var(--surface2);}
 
 /* ════════════════════════════════════════════════
    THERMAL PRINT — EPSON TM-T88V (80mm roll)
-   Printable width = 72mm. We use 68mm content
-   width to stay safely inside the print head.
-
-   KEY FIXES:
-   1. @page copies:1  → forces single copy
-   2. margin: 2mm 4mm  → leaves 4mm each side
-   3. .thermal-receipt width: 68mm (safe zone)
-   4. .col-r width: 22mm (wider for £ amounts)
-   5. font-size reduced slightly so nothing wraps
+   
+   FIXES APPLIED:
+   1. @page: size 80mm auto, margin 0 — zero margin,
+      we control ALL spacing inside the receipt div
+   2. .thermal-receipt: width 72mm, padding 4mm each
+      side = 80mm total, nothing can overflow
+   3. table-layout: fixed + width 100% on all tables
+      so columns never push outside the paper
+   4. font-size bumped slightly for readability
+   5. word-break: break-word everywhere so long names
+      wrap instead of overflow
    ════════════════════════════════════════════════ */
+
+/* Hide print frame in normal view */
 #thermal-print-frame { display: none; }
 
 @media print {
-  @page {
-    size: 80mm auto;
-    margin: 0; /* Let the printer hardware handle margins */
+  /* ── Hide everything on the page ── */
+  * { visibility: hidden !important; }
+
+  /* ── Show only the thermal frame ── */
+  #thermal-print-frame,
+  #thermal-print-frame * { visibility: visible !important; }
+
+  #thermal-print-frame {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 80mm !important;
   }
 
-  body {
+  /* ── Page: exactly 80mm wide, auto height, NO margins ── */
+  @page {
+    size: 80mm auto;
     margin: 0;
-    padding: 0;
   }
 
+  /* ── Wrapper: 80mm total = 4mm padding each side + 72mm content ── */
   .thermal-receipt {
-    width: 72mm; /* Increased from 68mm */
-    max-width: 72mm;
+    width: 80mm;
+    padding: 3mm 4mm 6mm 4mm;   /* top / right / bottom / left */
     font-family: 'Courier New', Courier, monospace;
-    font-size: 9pt; /* Slightly larger is usually fine for 80mm */
-    line-height: 1.2;
-    /* overflow: hidden;  <-- REMOVE THIS */
+    font-size: 8.5pt;
+    color: #000 !important;
+    background: #fff !important;
+    line-height: 1.5;
     box-sizing: border-box;
-  }
-
-  /* Ensure your price column is forced to the right */
-  .col-r {
-    text-align: right;
-    width: 25mm; 
-  }
-}
-
-  /* ── Page setup: 80mm wide, single copy ── */
-  @page {
-    size: 80mm auto;
-    margin: 2mm 4mm;   /* 4mm each side → 72mm usable */
-    /* copies: 1; */   /* Note: CSS copies not universally supported –
-                          set copies=1 in the browser print dialog too */
-  }
-
-  /* ── Receipt wrapper — 68mm keeps us well inside ── */
-  .thermal-receipt {
-    width: 68mm;
-    max-width: 68mm;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 8pt;
-    color: #000;
-    background: #fff;
-    line-height: 1.45;
     overflow: hidden;
+    word-break: break-word;
   }
 
-  /* ── Header ── */
+  /* ── Store name header ── */
   .th-store-name {
     display: block;
     text-align: center;
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 900;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 2px;
-    margin-bottom: 1mm;
+    margin-bottom: 1.5mm;
+    word-break: break-word;
   }
+
   .th-center  { text-align: center; display: block; }
-  .th-small   { font-size: 7pt; display: block; text-align: center; color: #333; }
+  .th-small   { font-size: 7.5pt; display: block; text-align: center; color: #333; }
   .th-bold    { font-weight: 700; }
   .th-spacer  { height: 2mm; display: block; }
-  .th-hr      { border: none; border-top: 1px dashed #888; margin: 1.5mm 0; display: block; }
-  .th-hr-solid{ border: none; border-top: 2px solid #000; margin: 2mm 0; display: block; }
-  .th-cut     { text-align: center; font-size: 7pt; color: #aaa; margin-top: 3mm; display: block; }
 
-  /* ── Line-item table ──
-     Total width = 68mm.  col-r = 22mm fixed, col-l fills remainder.
-     This guarantees prices NEVER fall off the right edge.          ── */
-  .th-table {
-    width: 68mm;
+  /* Dashed divider */
+  .th-hr {
+    border: none;
+    border-top: 1px dashed #555;
+    margin: 1.5mm 0;
+    display: block;
+    width: 100%;
+  }
+
+  /* Solid double-line divider */
+  .th-hr-solid {
+    border: none;
+    border-top: 2px solid #000;
+    margin: 2mm 0;
+    display: block;
+    width: 100%;
+  }
+
+  .th-cut { text-align: center; font-size: 7pt; color: #aaa; margin-top: 3mm; display: block; }
+
+  /* ── Line-item tables ──
+     width: 100% fills the content area (72mm).
+     col-r is 24mm fixed; col-l takes the rest.
+     table-layout:fixed prevents any column overflow.     ── */
+  .th-table,
+  .th-total-block {
+    width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    font-size: 8pt;
+    font-size: 8.5pt;
   }
-  .th-table .col-l {
+
+  .th-table .col-l,
+  .th-total-block .col-l {
     text-align: left;
     word-break: break-word;
-    padding: 0.5mm 1mm 0.5mm 0;
+    overflow-wrap: break-word;
+    padding: 0.6mm 1mm 0.6mm 0;
   }
-  .th-table .col-r {
+
+  .th-table .col-r,
+  .th-total-block .col-r {
     text-align: right;
     white-space: nowrap;
-    width: 22mm;          /* ← wide enough for £999.99 */
-    padding: 0.5mm 0 0.5mm 1mm;
+    width: 24mm;
+    padding: 0.6mm 0 0.6mm 1mm;
     font-weight: 700;
   }
 
-  /* Item name — full width row above qty/price row */
+  /* Item name spans full width above qty/price row */
   .th-item-name {
     display: block;
-    font-size: 8pt;
-    padding: 0.8mm 0 0.2mm;
+    font-size: 8.5pt;
+    padding: 1mm 0 0.3mm;
     word-break: break-word;
+    overflow-wrap: break-word;
     font-weight: 700;
   }
 
-  /* Category divider */
+  /* Category section divider */
   .th-cat-header {
+    display: block;
     text-align: center;
     font-size: 7pt;
     font-weight: 700;
@@ -393,38 +413,25 @@ tr:hover td{background:var(--surface2);}
     border-top: 1px dashed #aaa;
     border-bottom: 1px dashed #aaa;
     color: #333;
-    display: block;
-  }
-
-  /* ── Totals block — same table rules ── */
-  .th-total-block {
-    width: 68mm;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 8pt;
-  }
-  .th-total-block .col-l { text-align: left;  padding: 0.6mm 1mm 0.6mm 0; }
-  .th-total-block .col-r {
-    text-align: right;
-    white-space: nowrap;
-    width: 22mm;
-    padding: 0.6mm 0;
-    font-weight: 700;
   }
 
   /* ── Grand total — larger font ── */
   .th-grand {
-    width: 68mm;
+    width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    font-size: 12pt;
+    font-size: 13pt;
     font-weight: 900;
   }
-  .th-grand .col-l { text-align: left;  padding: 1mm 1mm 1mm 0; }
+  .th-grand .col-l {
+    text-align: left;
+    padding: 1mm 1mm 1mm 0;
+    word-break: break-word;
+  }
   .th-grand .col-r {
     text-align: right;
     white-space: nowrap;
-    width: 24mm;          /* ← a touch wider for the big TOTAL line */
+    width: 26mm;
     padding: 1mm 0;
   }
 }
@@ -658,8 +665,11 @@ tr:hover td{background:var(--surface2);}
       <div class="ss">
         <h3>🖨 Thermal Printer (Epson TM-T88V)</h3>
         <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;">
-          <strong style="color:var(--accent)">To print 1 copy only:</strong><br>
-          When the browser print dialog opens, set <strong style="color:var(--text)">Copies = 1</strong> and make sure your Epson driver is not set to duplicate. Also check Epson TM-T88V driver settings → uncheck any "Print 2 copies" or "journal" options.
+          <strong style="color:var(--accent)">Print setup:</strong><br>
+          • Paper width: <strong style="color:var(--text)">80mm</strong><br>
+          • When the print dialog opens, set <strong style="color:var(--text)">Copies = 1</strong><br>
+          • Select your Epson TM-T88V printer<br>
+          • Disable any "Print 2 copies" or "journal" options in the Epson driver settings
         </div>
       </div>
       <div class="ss">
@@ -811,7 +821,7 @@ tr:hover td{background:var(--surface2);}
   </div>
 </div>
 
-<!-- THERMAL PRINT FRAME — hidden until window.print() -->
+<!-- ══ THERMAL PRINT FRAME — only visible during window.print() ══ -->
 <div id="thermal-print-frame">
   <div class="thermal-receipt" id="thermal-content"></div>
 </div>
@@ -1400,8 +1410,6 @@ function dlPDF(){
 
 // ════════════════════════════════════════════════
 //  THERMAL PRINT — EPSON TM-T88V
-//  Uses table layout so right-side amounts never clip.
-//  Single copy: handled by beforeprint / CSS @page.
 // ════════════════════════════════════════════════
 function thermalPrint(type){
   const frame=document.getElementById('thermal-content');
@@ -1413,7 +1421,6 @@ function thermalPrint(type){
     const vals=getEODValues();
     frame.innerHTML=thermalBuildEOD(vals);
   }
-  // Small delay to let DOM render before print dialog
   setTimeout(()=>window.print(),120);
 }
 
@@ -1477,19 +1484,19 @@ function thermalBuildSale(sale){
     ${s.address?`<div class="th-small">${s.address}</div>`:''}
     ${s.phone?`<div class="th-small">${s.phone}</div>`:''}
     ${s.vat?`<div class="th-small">VAT: ${s.vat}</div>`:''}
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     <table class="th-total-block">
       <tr><td class="col-l">Receipt #</td><td class="col-r">${receiptNum}</td></tr>
       <tr><td class="col-l">Date/Time</td><td class="col-r" style="font-size:6.5pt">${dateStr}</td></tr>
       <tr><td class="col-l">Payment</td><td class="col-r">${sale.payMethod.toUpperCase()}</td></tr>
     </table>
-    <hr class="th-hr">
+    <div class="th-hr"></div>
     ${itemsHTML}
-    <hr class="th-hr">
+    <div class="th-hr"></div>
     ${totalsHTML}
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     ${grandHTML}
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     ${changeHTML}
     <div class="th-spacer"></div>
     <div class="th-center th-bold">${s.footer||'Thank you!'}</div>
@@ -1510,17 +1517,17 @@ function thermalBuildEOD(data){
     <div class="th-spacer"></div>
     <div class="th-center th-bold">END OF DAY SUMMARY</div>
     <div class="th-center">${data.date||'—'}</div>
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     <table class="th-total-block">
       <tr><td class="col-l th-bold">CASH SALES</td><td class="col-r">${f(data.cash)}</td></tr>
       <tr><td class="col-l th-bold">CARD SALES</td><td class="col-r">${f(data.card)}</td></tr>
       <tr><td class="col-l th-bold">EXPENSES</td><td class="col-r">${data.expenses>0?`-${f(data.expenses)}`:f(0)}</td></tr>
     </table>
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     <table class="th-grand">
       <tr><td class="col-l">TOTAL</td><td class="col-r">${f(data.net)}</td></tr>
     </table>
-    <hr class="th-hr-solid">
+    <div class="th-hr-solid"></div>
     <table class="th-total-block">
       <tr><td class="col-l">Till Left</td><td class="col-r">${f(data.till)}</td></tr>
     </table>
