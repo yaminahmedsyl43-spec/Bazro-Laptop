@@ -285,16 +285,32 @@ tr:hover td{background:var(--surface2);}
 #thermal-print-frame { display: none; }
 
 @media print {
-  /* Hide everything except the print frame */
-  body > * { display: none !important; }
-
-  #thermal-print-frame {
-    display: block !important;
-    position: fixed;
-    inset: 0;
-    background: #fff;
-    z-index: 99999;
+  @page {
+    size: 80mm auto;
+    margin: 0; /* Let the printer hardware handle margins */
   }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .thermal-receipt {
+    width: 72mm; /* Increased from 68mm */
+    max-width: 72mm;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9pt; /* Slightly larger is usually fine for 80mm */
+    line-height: 1.2;
+    /* overflow: hidden;  <-- REMOVE THIS */
+    box-sizing: border-box;
+  }
+
+  /* Ensure your price column is forced to the right */
+  .col-r {
+    text-align: right;
+    width: 25mm; 
+  }
+}
 
   /* ── Page setup: 80mm wide, single copy ── */
   @page {
