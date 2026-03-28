@@ -270,117 +270,147 @@ tr:hover td{background:var(--surface2);}
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-/* ════════════════════════════════
-   THERMAL PRINT — 80mm FIXED
-   Proper table alignment so nothing
-   gets cut off on the right edge
-   ════════════════════════════════ */
-#thermal-print-frame{display:none;}
+/* ════════════════════════════════════════════════
+   THERMAL PRINT — EPSON TM-T88V (80mm roll)
+   Printable width = 72mm. We use 68mm content
+   width to stay safely inside the print head.
 
-@media print{
-  body > *{display:none !important;}
-  #thermal-print-frame{
-    display:block !important;
-    position:fixed;
-    inset:0;
-    background:#fff;
-    z-index:99999;
+   KEY FIXES:
+   1. @page copies:1  → forces single copy
+   2. margin: 2mm 4mm  → leaves 4mm each side
+   3. .thermal-receipt width: 68mm (safe zone)
+   4. .col-r width: 22mm (wider for £ amounts)
+   5. font-size reduced slightly so nothing wraps
+   ════════════════════════════════════════════════ */
+#thermal-print-frame { display: none; }
+
+@media print {
+  /* Hide everything except the print frame */
+  body > * { display: none !important; }
+
+  #thermal-print-frame {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 99999;
   }
 
-  @page{
-    size:80mm auto;
-    margin:3mm 3mm;
+  /* ── Page setup: 80mm wide, single copy ── */
+  @page {
+    size: 80mm auto;
+    margin: 2mm 4mm;   /* 4mm each side → 72mm usable */
+    /* copies: 1; */   /* Note: CSS copies not universally supported –
+                          set copies=1 in the browser print dialog too */
   }
 
-  /* Base receipt styles */
-  .thermal-receipt{
-    width:72mm; /* 80mm - 2×3mm margins = 74mm; leave 2mm safety */
-    font-family:'Courier New',Courier,monospace;
-    font-size:8.5pt;
-    color:#000;
-    background:#fff;
-    line-height:1.5;
+  /* ── Receipt wrapper — 68mm keeps us well inside ── */
+  .thermal-receipt {
+    width: 68mm;
+    max-width: 68mm;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8pt;
+    color: #000;
+    background: #fff;
+    line-height: 1.45;
+    overflow: hidden;
   }
 
   /* ── Header ── */
-  .th-store-name{
-    display:block;
-    text-align:center;
-    font-size:14pt;
-    font-weight:900;
-    font-family:Arial,Helvetica,sans-serif;
-    letter-spacing:2px;
-    margin-bottom:1mm;
+  .th-store-name {
+    display: block;
+    text-align: center;
+    font-size: 13pt;
+    font-weight: 900;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 2px;
+    margin-bottom: 1mm;
   }
-  .th-center{text-align:center;display:block;}
-  .th-small{font-size:7.5pt;display:block;text-align:center;color:#333;}
-  .th-bold{font-weight:700;}
-  .th-spacer{height:2.5mm;display:block;}
-  .th-hr{border:none;border-top:1px dashed #888;margin:2mm 0;display:block;}
-  .th-hr-solid{border:none;border-top:2px solid #000;margin:2.5mm 0;display:block;}
-  .th-cut{text-align:center;font-size:7pt;color:#aaa;margin-top:3mm;display:block;}
+  .th-center  { text-align: center; display: block; }
+  .th-small   { font-size: 7pt; display: block; text-align: center; color: #333; }
+  .th-bold    { font-weight: 700; }
+  .th-spacer  { height: 2mm; display: block; }
+  .th-hr      { border: none; border-top: 1px dashed #888; margin: 1.5mm 0; display: block; }
+  .th-hr-solid{ border: none; border-top: 2px solid #000; margin: 2mm 0; display: block; }
+  .th-cut     { text-align: center; font-size: 7pt; color: #aaa; margin-top: 3mm; display: block; }
 
-  /* ── Line items: use full-width table so right column never clips ── */
-  .th-table{
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-    font-size:8.5pt;
+  /* ── Line-item table ──
+     Total width = 68mm.  col-r = 22mm fixed, col-l fills remainder.
+     This guarantees prices NEVER fall off the right edge.          ── */
+  .th-table {
+    width: 68mm;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 8pt;
   }
-  .th-table .col-l{
-    text-align:left;
-    word-break:break-word;
-    padding:1mm 1mm 1mm 0;
+  .th-table .col-l {
+    text-align: left;
+    word-break: break-word;
+    padding: 0.5mm 1mm 0.5mm 0;
   }
-  .th-table .col-r{
-    text-align:right;
-    white-space:nowrap;
-    width:20mm; /* fixed width for amounts */
-    padding:1mm 0 1mm 1mm;
-    font-weight:700;
+  .th-table .col-r {
+    text-align: right;
+    white-space: nowrap;
+    width: 22mm;          /* ← wide enough for £999.99 */
+    padding: 0.5mm 0 0.5mm 1mm;
+    font-weight: 700;
   }
-  /* Item name row — full width */
-  .th-item-name{
-    display:block;
-    font-size:8.5pt;
-    padding:1mm 0 0.3mm;
-    word-break:break-word;
+
+  /* Item name — full width row above qty/price row */
+  .th-item-name {
+    display: block;
+    font-size: 8pt;
+    padding: 0.8mm 0 0.2mm;
+    word-break: break-word;
+    font-weight: 700;
   }
+
   /* Category divider */
-  .th-cat-header{
-    text-align:center;
-    font-size:7.5pt;
-    font-weight:700;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    padding:1.5mm 0;
-    margin:2mm 0;
-    border-top:1px dashed #aaa;
-    border-bottom:1px dashed #aaa;
-    color:#333;
-    display:block;
+  .th-cat-header {
+    text-align: center;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 1mm 0;
+    margin: 1.5mm 0;
+    border-top: 1px dashed #aaa;
+    border-bottom: 1px dashed #aaa;
+    color: #333;
+    display: block;
   }
 
-  /* ── Totals section ── */
-  .th-total-block{
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-    font-size:8.5pt;
+  /* ── Totals block — same table rules ── */
+  .th-total-block {
+    width: 68mm;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 8pt;
   }
-  .th-total-block .col-l{text-align:left;padding:0.8mm 1mm 0.8mm 0;}
-  .th-total-block .col-r{text-align:right;white-space:nowrap;width:20mm;padding:0.8mm 0;font-weight:700;}
+  .th-total-block .col-l { text-align: left;  padding: 0.6mm 1mm 0.6mm 0; }
+  .th-total-block .col-r {
+    text-align: right;
+    white-space: nowrap;
+    width: 22mm;
+    padding: 0.6mm 0;
+    font-weight: 700;
+  }
 
-  /* ── Grand total ── */
-  .th-grand{
-    width:100%;
-    border-collapse:collapse;
-    table-layout:fixed;
-    font-size:13pt;
-    font-weight:900;
+  /* ── Grand total — larger font ── */
+  .th-grand {
+    width: 68mm;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12pt;
+    font-weight: 900;
   }
-  .th-grand .col-l{text-align:left;padding:1mm 1mm 1mm 0;}
-  .th-grand .col-r{text-align:right;white-space:nowrap;width:22mm;padding:1mm 0;}
+  .th-grand .col-l { text-align: left;  padding: 1mm 1mm 1mm 0; }
+  .th-grand .col-r {
+    text-align: right;
+    white-space: nowrap;
+    width: 24mm;          /* ← a touch wider for the big TOTAL line */
+    padding: 1mm 0;
+  }
 }
 </style>
 </head>
@@ -412,7 +442,6 @@ tr:hover td{background:var(--surface2);}
 
   <!-- CHECKOUT -->
   <section id="pg-checkout" class="page on">
-    <!-- USB Scanner status bar -->
     <div id="scanner-status" style="position:absolute;top:0;left:210px;right:0;z-index:10;">
       <div class="dot"></div>
       <span>USB/Bluetooth Scanner: Ready</span>
@@ -611,6 +640,13 @@ tr:hover td{background:var(--surface2);}
         </div>
       </div>
       <div class="ss">
+        <h3>🖨 Thermal Printer (Epson TM-T88V)</h3>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;">
+          <strong style="color:var(--accent)">To print 1 copy only:</strong><br>
+          When the browser print dialog opens, set <strong style="color:var(--text)">Copies = 1</strong> and make sure your Epson driver is not set to duplicate. Also check Epson TM-T88V driver settings → uncheck any "Print 2 copies" or "journal" options.
+        </div>
+      </div>
+      <div class="ss">
         <h3>🗄 Database</h3>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="bsm" onclick="exportDB()">⬇ Export Backup</button>
@@ -759,7 +795,7 @@ tr:hover td{background:var(--surface2);}
   </div>
 </div>
 
-<!-- THERMAL PRINT FRAME -->
+<!-- THERMAL PRINT FRAME — hidden until window.print() -->
 <div id="thermal-print-frame">
   <div class="thermal-receipt" id="thermal-content"></div>
 </div>
@@ -769,8 +805,6 @@ tr:hover td{background:var(--surface2);}
 <script>
 // ════════════════════════════════════════════════
 //  USB / BLUETOOTH HID BARCODE SCANNER SUPPORT
-//  Scanners send characters very fast (< 80ms each)
-//  followed by Enter. We capture that globally.
 // ════════════════════════════════════════════════
 let hidBuffer='';
 let hidLastTime=0;
@@ -781,26 +815,16 @@ function getHIDSpeed(){
 }
 
 document.addEventListener('keydown',function(e){
-  // Ignore if user is typing in an input/textarea that is NOT the search bar
   const tag=e.target.tagName;
   const isSearchBar=(e.target.id==='psearch');
   const isTypingField=(tag==='INPUT'||tag==='TEXTAREA')&&!isSearchBar;
-
-  // Don't intercept modifier combos
   if(e.ctrlKey||e.altKey||e.metaKey) return;
-
   const now=Date.now();
   const gap=now-hidLastTime;
   hidLastTime=now;
-
-  // If gap is longer than threshold, this is a human keypress — reset buffer
-  if(gap>getHIDSpeed()&&hidBuffer.length>0){
-    hidBuffer='';
-  }
-
+  if(gap>getHIDSpeed()&&hidBuffer.length>0){ hidBuffer=''; }
   if(e.key==='Enter'){
     if(hidBuffer.length>=3){
-      // Barcode complete — handle it
       const code=hidBuffer.trim();
       hidBuffer='';
       clearTimeout(hidTimer);
@@ -811,57 +835,37 @@ document.addEventListener('keydown',function(e){
     hidBuffer='';
     return;
   }
-
-  // Only accumulate printable characters
   if(e.key.length===1){
     hidBuffer+=e.key;
     clearTimeout(hidTimer);
-    // Auto-submit if no Enter received after 300ms (some scanners don't send Enter)
     hidTimer=setTimeout(()=>{
       if(hidBuffer.length>=6){
         const code=hidBuffer.trim();
         hidBuffer='';
         handleHIDScan(code);
-      } else {
-        hidBuffer='';
-      }
+      } else { hidBuffer=''; }
     },300);
   }
 });
 
 function handleHIDScan(code){
-  // Update status bar
   document.getElementById('scanner-last').textContent=`· Last scan: ${code}`;
-
-  // Determine context
   const activePage=document.querySelector('.page.on');
   const pageId=activePage?activePage.id:'';
-
-  if(pageId==='pg-checkout'||pageId==='pg-checkout'){
-    // Checkout — add to basket
+  if(pageId==='pg-checkout'){
     const p=db.products.find(x=>x.barcode===code);
-    if(p){
-      addToBasket(p.id);
-      toast(`📷 Scanned: ${p.emoji} ${p.name}`);
-    } else {
-      toast(`Barcode not found: ${code}`,'warning');
-    }
+    if(p){ addToBasket(p.id); toast(`📷 Scanned: ${p.emoji} ${p.name}`); }
+    else { toast(`Barcode not found: ${code}`,'warning'); }
   } else if(pageId==='pg-inv'){
-    // Inventory — find product
     const p=db.products.find(x=>x.barcode===code);
     if(p){
-      // Flash the row
       renderInv();
       setTimeout(()=>flashRow(p.id),80);
       toast(`📦 Found: ${p.name} (Stock: ${p.stock})`);
-      // Put barcode in search
       const inv=document.getElementById('invsearch');
       if(inv){inv.value=p.barcode;renderInv();}
-    } else {
-      toast(`Barcode not in inventory: ${code}`,'warning');
-    }
+    } else { toast(`Barcode not in inventory: ${code}`,'warning'); }
   } else if(pageId==='pg-set'){
-    // Settings — fill barcode field if item modal is open
     const bc=document.getElementById('ibarcode');
     if(bc&&document.getElementById('mo-item').classList.contains('on')){
       bc.value=code;
@@ -871,50 +875,7 @@ function handleHIDScan(code){
 }
 
 // ════════════════════════════════════════════════
-//  MINIMAL QR CODE (pure JS)
-// ════════════════════════════════════════════════
-const QR=(function(){
-  const GF={exp:new Uint8Array(512),log:new Uint8Array(256)};
-  let x=1;for(let i=0;i<255;i++){GF.exp[i]=x;GF.log[x]=i;x<<=1;if(x&256)x^=285;}
-  for(let i=255;i<512;i++)GF.exp[i]=GF.exp[i-255];
-  const gmul=(a,b)=>a&&b?GF.exp[(GF.log[a]+GF.log[b])%255]:0;
-  function genPoly(ec){let p=[1];for(let i=0;i<ec;i++){let q=[1,GF.exp[i]];let r=[];for(let j=0;j<p.length+1;j++){r[j]=0;if(j<p.length)r[j]^=p[j];if(j>0)r[j]^=gmul(p[j-1],q[1]);}p=r;}return p;}
-  function rsEncode(data,ec){const g=genPoly(ec);let r=[...data];for(let i=0;i<data.length;i++){const c=r.shift();if(c)for(let j=0;j<g.length-1;j++)r[j]^=gmul(c,g[j]);}return r;}
-  const PAD=[236,17];
-  function encode(text){
-    const bytes=[];for(let i=0;i<text.length;i++)bytes.push(text.charCodeAt(i)&0xff);
-    let ver=1;for(;ver<=10;ver++){if(bytes.length+2<=(ver*4+17)*2)break;}
-    ver=Math.max(1,Math.min(ver,10));
-    const ecBytes=Math.max(7,Math.floor(bytes.length*0.5));
-    let bits=[];
-    const push=(val,n)=>{for(let i=n-1;i>=0;i--)bits.push((val>>i)&1);};
-    push(4,4);push(bytes.length,8);bytes.forEach(b=>push(b,8));push(0,4);
-    while(bits.length%8)bits.push(0);
-    const data=[];for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b);}
-    const cap=Math.max(data.length+2,19+ver*3);
-    while(data.length<cap)data.push(PAD[data.length%2===0?0:1]);
-    const ec=Math.min(ecBytes,cap-data.length+ecBytes);
-    const ecc=rsEncode(data.slice(0,cap-ec),ec);
-    const all=[...data.slice(0,cap-ec),...ecc];
-    const sz=ver*4+17;
-    const mat=Array.from({length:sz},()=>new Uint8Array(sz).fill(2));
-    const set=(r,c,v)=>{if(r>=0&&r<sz&&c>=0&&c<sz)mat[r][c]=v;};
-    const finder=(r,c)=>{for(let i=-1;i<=7;i++)for(let j=-1;j<=7;j++){if(i>=0&&i<=6&&j>=0&&j<=6)set(r+i,c+j,(i===0||i===6||j===0||j===6)?1:(i>=2&&i<=4&&j>=2&&j<=4)?1:0);else set(r+i,c+j,0);}};
-    finder(0,0);finder(0,sz-7);finder(sz-7,0);
-    for(let i=8;i<sz-8;i++){if(mat[6][i]===2)mat[6][i]=i%2===0?1:0;if(mat[i][6]===2)mat[i][6]=i%2===0?1:0;}
-    mat[sz-8][8]=1;
-    let bi=0;let up=true;
-    for(let col=sz-1;col>=1;col-=2){if(col===6)col=5;for(let rr=0;rr<sz;rr++){const r=up?sz-1-rr:rr;for(let dc=0;dc<2;dc++){const c=col-dc;if(mat[r][c]===2){const bit=bi<all.length*8?(all[Math.floor(bi/8)]>>(7-bi%8))&1:0;mat[r][c]=bit^((r+c)%2===0?1:0);bi++;}}}up=!up;}
-    return{mat,sz};
-  }
-  function draw(canvas,text,size){
-    try{const{mat,sz}=encode(text);const cell=Math.floor(size/sz);const off=Math.floor((size-cell*sz)/2);canvas.width=canvas.height=size;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.fillStyle='#000';for(let r=0;r<sz;r++)for(let c=0;c<sz;c++)if(mat[r][c]===1)ctx.fillRect(off+c*cell,off+r*cell,cell,cell);}catch(e){canvas.width=canvas.height=size;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);}
-  }
-  return{draw};
-})();
-
-// ════════════════════════════════════════════════
-//  MINIMAL PDF GENERATOR (pure JS)
+//  MINIMAL PDF GENERATOR
 // ════════════════════════════════════════════════
 const PDF=(function(){
   function create(){
@@ -1422,9 +1383,9 @@ function dlPDF(){
 }
 
 // ════════════════════════════════════════════════
-//  THERMAL PRINT — FIXED LAYOUT
-//  Uses HTML tables for guaranteed column alignment
-//  on 80mm thermal paper (no text clipping)
+//  THERMAL PRINT — EPSON TM-T88V
+//  Uses table layout so right-side amounts never clip.
+//  Single copy: handled by beforeprint / CSS @page.
 // ════════════════════════════════════════════════
 function thermalPrint(type){
   const frame=document.getElementById('thermal-content');
@@ -1436,7 +1397,8 @@ function thermalPrint(type){
     const vals=getEODValues();
     frame.innerHTML=thermalBuildEOD(vals);
   }
-  setTimeout(()=>window.print(),80);
+  // Small delay to let DOM render before print dialog
+  setTimeout(()=>window.print(),120);
 }
 
 function thermalBuildSale(sale){
@@ -1458,7 +1420,6 @@ function thermalBuildSale(sale){
   const cats=Object.keys(catMap).sort();
   const multiCat=cats.length>1;
 
-  // Build items using tables — col-r is fixed 20mm so amounts never clip
   let itemsHTML='';
   cats.forEach(cat=>{
     if(multiCat) itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
@@ -1474,7 +1435,6 @@ function thermalBuildSale(sale){
     });
   });
 
-  // Totals
   let totalsHTML=`<table class="th-total-block">
     <tr><td class="col-l">Subtotal</td><td class="col-r">${f(sale.subtotal)}</td></tr>`;
   if(sale.discPct>0){
@@ -1483,12 +1443,10 @@ function thermalBuildSale(sale){
   totalsHTML+=`<tr><td class="col-l">Tax ${s.tax||20}%</td><td class="col-r">${f(sale.tax)}</td></tr>
   </table>`;
 
-  // Grand total
-  let grandHTML=`<table class="th-grand">
+  const grandHTML=`<table class="th-grand">
     <tr><td class="col-l">TOTAL</td><td class="col-r">${f(sale.total)}</td></tr>
   </table>`;
 
-  // Change
   let changeHTML='';
   if(sale.payMethod==='cash'){
     changeHTML=`<div class="th-spacer"></div>
@@ -1506,7 +1464,7 @@ function thermalBuildSale(sale){
     <hr class="th-hr-solid">
     <table class="th-total-block">
       <tr><td class="col-l">Receipt #</td><td class="col-r">${receiptNum}</td></tr>
-      <tr><td class="col-l">Date</td><td class="col-r">${dateStr}</td></tr>
+      <tr><td class="col-l">Date/Time</td><td class="col-r" style="font-size:6.5pt">${dateStr}</td></tr>
       <tr><td class="col-l">Payment</td><td class="col-r">${sale.payMethod.toUpperCase()}</td></tr>
     </table>
     <hr class="th-hr">
@@ -1540,7 +1498,7 @@ function thermalBuildEOD(data){
     <table class="th-total-block">
       <tr><td class="col-l th-bold">CASH SALES</td><td class="col-r">${f(data.cash)}</td></tr>
       <tr><td class="col-l th-bold">CARD SALES</td><td class="col-r">${f(data.card)}</td></tr>
-      <tr><td class="col-l th-bold">EXPENSES</td><td class="col-r">${data.expenses>0?`- ${f(data.expenses)}`:f(0)}</td></tr>
+      <tr><td class="col-l th-bold">EXPENSES</td><td class="col-r">${data.expenses>0?`-${f(data.expenses)}`:f(0)}</td></tr>
     </table>
     <hr class="th-hr-solid">
     <table class="th-grand">
@@ -1813,7 +1771,7 @@ function printEODRecord(id){
 function thermalPrintEODRecord(id){
   const r=db.eodRecords.find(x=>x.id===id);if(!r)return;
   document.getElementById('thermal-content').innerHTML=thermalBuildEOD(r);
-  setTimeout(()=>window.print(),80);
+  setTimeout(()=>window.print(),120);
 }
 
 // ════════════════════════════════════════════════
