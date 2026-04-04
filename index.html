@@ -44,15 +44,29 @@ nav{flex:1;padding:10px 0;overflow-y:auto;}
 .si::placeholder{color:var(--text2);}
 .scan-btn{background:var(--accent2);border:none;border-radius:10px;padding:9px 13px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;transition:.15s;}
 .scan-btn:hover{background:#9a7aff;}
-.cats{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;flex-shrink:0;}
+
+/* CATEGORIES — draggable */
+.cats{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;flex-shrink:0;align-items:center;}
 .cats::-webkit-scrollbar{height:3px;}.cats::-webkit-scrollbar-thumb{background:var(--border);}
-.cb{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;}
+.cb{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;user-select:none;position:relative;}
 .cb.on,.cb:hover{background:var(--accent);color:#000;border-color:var(--accent);}
+.cb.dragging{opacity:.4;transform:scale(.95);}
+.cb.drag-over{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2);}
+/* Custom (last) category always special */
+.cb.custom-cat{background:rgba(255,107,53,.12);border-color:#ff6b35;color:#ff6b35;}
+.cb.custom-cat.on{background:#ff6b35;color:#000;border-color:#ff6b35;}
+.cat-drag-hint{font-size:10px;color:var(--text2);white-space:nowrap;padding:4px 8px;opacity:.6;}
+
+/* PRODUCTS */
 #pgrid{flex:1;overflow-y:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;align-content:start;}
 .pc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;display:flex;flex-direction:column;gap:6px;}
 .pc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,229,160,.1);}
 .pc.low-s{border-color:var(--warning);}
 .pc.out-s{opacity:.45;pointer-events:none;}
+/* Weight product — orange tint */
+.pc.weight-prod{border-color:rgba(255,140,0,.4);background:rgba(255,140,0,.04);}
+.pc.weight-prod:hover{border-color:var(--brand);}
+.pc-unit-badge{font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(255,140,0,.15);color:var(--brand);font-weight:700;width:fit-content;font-family:'Courier New',monospace;}
 .pe{font-size:26px;}.pn{font-size:12px;font-weight:700;line-height:1.3;}
 .pbc{font-size:9px;color:var(--text2);font-family:'Courier New',monospace;}
 .pp{font-size:15px;font-weight:700;color:var(--accent);font-family:'Courier New',monospace;}
@@ -60,6 +74,9 @@ nav{flex:1;padding:10px 0;overflow-y:auto;}
 .stk-ok{background:rgba(0,229,160,.1);color:var(--accent);}
 .stk-low{background:rgba(255,176,32,.1);color:var(--warning);}
 .stk-out{background:rgba(255,68,68,.1);color:var(--danger);}
+/* Custom product card */
+.pc.custom-prod{border:2px dashed rgba(255,107,53,.5);background:rgba(255,107,53,.04);}
+.pc.custom-prod:hover{border-color:#ff6b35;}
 
 /* BASKET */
 #bpanel{width:320px;min-width:320px;display:flex;flex-direction:column;background:var(--surface);}
@@ -72,6 +89,12 @@ nav{flex:1;padding:10px 0;overflow-y:auto;}
 .bii{flex:1;min-width:0;}
 .bin{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bip{font-size:10px;color:var(--text2);font-family:'Courier New',monospace;}
+/* weight item shows weight instead of qty control */
+.bi-weight{flex:1;min-width:0;}
+.bi-weight .bin{font-size:12px;font-weight:700;}
+.bi-weight .bip{font-size:10px;color:var(--text2);font-family:'Courier New',monospace;}
+.weight-edit-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--accent);font-size:10px;font-weight:700;padding:3px 7px;cursor:pointer;white-space:nowrap;}
+.weight-edit-btn:hover{border-color:var(--accent);}
 .qc{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1px;}
 .qb{background:none;border:none;color:var(--text);font-size:14px;width:22px;height:22px;cursor:pointer;border-radius:5px;display:flex;align-items:center;justify-content:center;}
 .qb:hover{background:var(--border);}
@@ -92,6 +115,8 @@ nav{flex:1;padding:10px 0;overflow-y:auto;}
 .btn-d{background:var(--danger);color:#fff;font-size:12px;padding:9px;margin-top:6px;}
 .btn-d:hover{background:#ff6a6a;}
 .btn-s{background:var(--surface2);color:var(--text);border:1px solid var(--border);font-size:12px;padding:9px;}
+.btn-o{background:var(--brand);color:#000;font-size:12px;padding:9px;margin-top:6px;}
+.btn-o:hover{background:var(--brand2);}
 
 /* TOOLBAR */
 .tb{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
@@ -161,7 +186,7 @@ tr:hover td{background:var(--surface2);}
 .eod-receipt-body{padding:24px 28px;}
 .eod-receipt-date{font-size:13px;font-weight:700;text-align:center;margin-bottom:18px;color:#333;}
 .eod-receipt-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px dashed #ddd;}
-.eod-receipt-row .rl{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#111;}
+.eod-receipt-row .rl{font-size:13px;font-weight:700;text-transform:uppercase;color:#111;}
 .eod-receipt-row .rv{font-size:13px;font-weight:700;color:#111;font-family:'Courier New',monospace;}
 .eod-receipt-row .rv.neg{color:#cc0000;}
 .eod-receipt-total-hr{border:none;border-top:2px solid #111;margin:16px 0 4px;}
@@ -199,6 +224,24 @@ tr:hover td{background:var(--surface2);}
 .badge-green{background:rgba(0,229,160,.15);color:var(--accent);border:1px solid var(--accent);}
 .badge-orange{background:rgba(255,176,32,.15);color:var(--warning);border:1px solid var(--warning);}
 .badge-red{background:rgba(255,68,68,.15);color:var(--danger);border:1px solid var(--danger);}
+
+/* WEIGHT INPUT MODAL */
+.weight-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.wkb{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;color:var(--text);font-size:18px;font-weight:700;cursor:pointer;font-family:'Courier New',monospace;transition:.12s;text-align:center;}
+.wkb:hover{background:var(--border);}
+.wkb.del{color:var(--danger);}
+.wkb.ok{background:var(--accent);color:#000;border-color:var(--accent);}
+.wkb.span2{grid-column:span 2;}
+.weight-display{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;margin:12px 0;}
+.weight-display .wval{font-size:36px;font-weight:900;color:var(--accent);font-family:'Courier New',monospace;}
+.weight-display .wunit{font-size:14px;color:var(--text2);margin-top:4px;}
+.weight-display .wamt{font-size:18px;font-weight:700;color:var(--text);margin-top:6px;font-family:'Courier New',monospace;}
+.unit-switch{display:flex;gap:6px;margin-bottom:12px;}
+.unit-btn{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;transition:.15s;text-align:center;}
+.unit-btn.on{background:var(--brand);color:#000;border-color:var(--brand);}
+
+/* CUSTOM PRODUCT MODAL */
+.custom-mo{max-width:400px;}
 
 /* SCANNER MODAL */
 .mo.scan-mo{max-width:420px;}
@@ -348,6 +391,7 @@ tr:hover td{background:var(--surface2);}
           <div class="tr grand"><span>Total</span><span id="ttot">£0.00</span></div>
         </div>
         <button class="btn btn-p" onclick="openPay()">Pay Now</button>
+        <button class="btn btn-o" onclick="openCustomProduct()">＋ Custom Item</button>
         <button class="btn btn-d" onclick="clearBasket()">🗑 Clear Basket</button>
       </div>
     </aside>
@@ -373,7 +417,7 @@ tr:hover td{background:var(--surface2);}
     </div>
     <div id="inv-wrap">
       <table>
-        <thead><tr><th>Item</th><th>Barcode</th><th>Category</th><th>Price</th><th>Cost</th><th>Stock</th><th>Actions</th></tr></thead>
+        <thead><tr><th>Item</th><th>Barcode</th><th>Category</th><th>Price / Unit</th><th>Cost</th><th>Stock</th><th>Actions</th></tr></thead>
         <tbody id="inv-body"></tbody>
       </table>
     </div>
@@ -417,45 +461,17 @@ tr:hover td{background:var(--surface2);}
       <div class="eod-input-panel">
         <div class="eod-section">
           <h3>💵 Sales</h3>
-          <div class="eod-field">
-            <label>Cash Sales</label>
-            <div class="eod-field-row">
-              <span class="eod-prefix" id="eod-sym1">£</span>
-              <input class="eod-input pos" id="eod-cash" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()">
-            </div>
-          </div>
-          <div class="eod-field">
-            <label>Card Sales</label>
-            <div class="eod-field-row">
-              <span class="eod-prefix" id="eod-sym2">£</span>
-              <input class="eod-input pos" id="eod-card" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()">
-            </div>
-          </div>
+          <div class="eod-field"><label>Cash Sales</label><div class="eod-field-row"><span class="eod-prefix" id="eod-sym1">£</span><input class="eod-input pos" id="eod-cash" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()"></div></div>
+          <div class="eod-field"><label>Card Sales</label><div class="eod-field-row"><span class="eod-prefix" id="eod-sym2">£</span><input class="eod-input pos" id="eod-card" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()"></div></div>
         </div>
         <div class="eod-section">
-          <h3>🧾 Expenses / Refunds</h3>
-          <div class="eod-field">
-            <label>Total Expenses (enter as positive — shown as deduction)</label>
-            <div class="eod-field-row">
-              <span class="eod-prefix">−</span>
-              <span class="eod-prefix" id="eod-sym3">£</span>
-              <input class="eod-input neg" id="eod-exp" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()">
-            </div>
-          </div>
-          <div class="eod-field" style="margin-bottom:0">
-            <label>Expense Notes (optional)</label>
-            <input class="eod-input" id="eod-expnotes" type="text" placeholder="e.g. Staff wages, refunds…" style="font-size:13px;text-align:left;padding:10px 14px;" oninput="recalcEOD()">
-          </div>
+          <h3>🧾 Expenses</h3>
+          <div class="eod-field"><label>Total Expenses (enter as positive)</label><div class="eod-field-row"><span class="eod-prefix">−</span><span class="eod-prefix" id="eod-sym3">£</span><input class="eod-input neg" id="eod-exp" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()"></div></div>
+          <div class="eod-field" style="margin-bottom:0"><label>Notes (optional)</label><input class="eod-input" id="eod-expnotes" type="text" placeholder="e.g. Staff wages…" style="font-size:13px;text-align:left;padding:10px 14px;" oninput="recalcEOD()"></div>
         </div>
         <div class="eod-section">
           <h3>💰 Till Cash</h3>
-          <div class="eod-field">
-            <label>Cash Left in Till (info only — does not affect total)</label>
-            <div class="eod-field-row">
-              <span class="eod-prefix" id="eod-sym4">£</span>
-              <input class="eod-input" id="eod-till" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()">
-            </div>
-          </div>
+          <div class="eod-field"><label>Cash Left in Till (info only)</label><div class="eod-field-row"><span class="eod-prefix" id="eod-sym4">£</span><input class="eod-input" id="eod-till" type="number" step="0.01" min="0" placeholder="0.00" oninput="recalcEOD()"></div></div>
         </div>
         <div class="eod-section">
           <h3>📅 Saved Records</h3>
@@ -482,11 +498,7 @@ tr:hover td{background:var(--surface2);}
 
   <!-- SETTINGS -->
   <section id="pg-set" class="page">
-    <div class="tb">
-      <h2>⚙️ Settings</h2>
-      <div class="sp"></div>
-      <button class="bsm" onclick="saveSettings()">💾 Save</button>
-    </div>
+    <div class="tb"><h2>⚙️ Settings</h2><div class="sp"></div><button class="bsm" onclick="saveSettings()">💾 Save</button></div>
     <div id="set-c">
       <div class="ss">
         <h3>🏪 Store</h3>
@@ -500,33 +512,22 @@ tr:hover td{background:var(--surface2);}
       <div class="ss">
         <h3>💱 Currency</h3>
         <div class="fr"><label>Currency Symbol</label><input id="sc2" placeholder="£" style="max-width:80px"></div>
-        <div style="font-size:12px;color:var(--text2);padding:8px;background:var(--surface2);border-radius:8px;">
-          ℹ️ Tax is disabled. All prices are final — no tax is added at checkout or shown on receipts.
-        </div>
+        <div style="font-size:12px;color:var(--text2);padding:8px;background:var(--surface2);border-radius:8px;">ℹ️ No tax — prices are final as set.</div>
       </div>
       <div class="ss">
         <h3>🔍 USB / Bluetooth Scanner</h3>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;font-size:12px;color:var(--text2);line-height:1.6;">
-          Plug in your USB or Bluetooth scanner — it works <strong style="color:var(--accent)">automatically</strong>. Characters arriving faster than the threshold below are treated as scanner input, not keyboard typing.
-        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;font-size:12px;color:var(--text2);line-height:1.6;">Plug in your scanner — it works <strong style="color:var(--accent)">automatically</strong>.</div>
         <div class="fr"><label>Scanner Speed Threshold (ms)</label><input id="scanner-speed" type="number" placeholder="80" style="max-width:100px"></div>
       </div>
       <div class="ss">
-        <h3>🖨 Thermal Printer</h3>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;">
-          <strong style="color:var(--accent)">Print setup (Epson TM-T88V / 80mm):</strong><br>
-          • Set your thermal printer as the <strong style="color:var(--text)">default printer</strong><br>
-          • Click 🖨 Print Receipt — browser print dialog opens<br>
-          • Paper width auto-set to <strong style="color:var(--text)">80mm</strong>
-        </div>
+        <h3>🖨 Thermal Printer (80mm)</h3>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;"><strong style="color:var(--accent)">Setup:</strong> Set thermal printer as default → click 🖨 Print → select printer in dialog.</div>
       </div>
       <div class="ss">
         <h3>🗄 Database</h3>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="bsm" onclick="exportDB()">⬇ Export Backup</button>
-          <label class="bsm" style="cursor:pointer">⬆ Import
-            <input type="file" accept=".json" style="display:none" onchange="promptImport(event)">
-          </label>
+          <label class="bsm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="promptImport(event)"></label>
           <button class="bsm red" onclick="resetAll()">⚠ Reset</button>
         </div>
       </div>
@@ -538,33 +539,96 @@ tr:hover td{background:var(--surface2);}
 
 <!-- ══════════ MODALS ══════════ -->
 
+<!-- WEIGHT INPUT MODAL -->
+<div class="ov" id="mo-weight">
+  <div class="mo" style="max-width:360px">
+    <button class="mclose" onclick="closeMo('mo-weight')">✕</button>
+    <h2 id="wmo-title">⚖ Enter Weight</h2>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px;" id="wmo-subtitle">Price per kg</div>
+    <div class="unit-switch">
+      <button class="unit-btn on" id="wunit-kg" onclick="setWeightUnit('kg')">kg</button>
+      <button class="unit-btn" id="wunit-g" onclick="setWeightUnit('g')">g</button>
+    </div>
+    <div class="weight-display">
+      <div class="wval" id="wdisplay">0</div>
+      <div class="wunit" id="wunit-label">kg</div>
+      <div class="wamt" id="wamt-display">£0.00</div>
+    </div>
+    <div class="weight-keypad">
+      <button class="wkb" onclick="wkp('1')">1</button>
+      <button class="wkb" onclick="wkp('2')">2</button>
+      <button class="wkb" onclick="wkp('3')">3</button>
+      <button class="wkb" onclick="wkp('4')">4</button>
+      <button class="wkb" onclick="wkp('5')">5</button>
+      <button class="wkb" onclick="wkp('6')">6</button>
+      <button class="wkb" onclick="wkp('7')">7</button>
+      <button class="wkb" onclick="wkp('8')">8</button>
+      <button class="wkb" onclick="wkp('9')">9</button>
+      <button class="wkb" onclick="wkp('.')">.</button>
+      <button class="wkb" onclick="wkp('0')">0</button>
+      <button class="wkb del" onclick="wkp('del')">⌫</button>
+      <button class="wkb ok span2" onclick="wkp('ok')">✓ Add to Basket</button>
+      <button class="wkb" onclick="closeMo('mo-weight')">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM PRODUCT MODAL -->
+<div class="ov" id="mo-custom">
+  <div class="mo custom-mo">
+    <button class="mclose" onclick="closeMo('mo-custom')">✕</button>
+    <h2>➕ Custom Item</h2>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Add a one-off item — not saved to inventory</div>
+    <div class="fr"><label>Item Name *</label><input id="cust-name" placeholder="e.g. Loose Tomatoes" oninput="calcCustomAmt()"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fr">
+        <label>Price *</label>
+        <input id="cust-price" type="number" step="0.01" min="0" placeholder="0.00" oninput="calcCustomAmt()">
+      </div>
+      <div class="fr">
+        <label>Qty / Weight</label>
+        <input id="cust-qty" type="number" step="0.001" min="0.001" value="1" oninput="calcCustomAmt()">
+      </div>
+    </div>
+    <div class="fr">
+      <label>Unit</label>
+      <select id="cust-unit" onchange="calcCustomAmt()">
+        <option value="each">each (fixed price)</option>
+        <option value="kg">per kg</option>
+        <option value="g">per 100g</option>
+        <option value="lb">per lb</option>
+      </select>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;margin:12px 0;">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px;" id="cust-calc-label">Total</div>
+      <div style="font-size:28px;font-weight:900;color:var(--accent);font-family:'Courier New',monospace;" id="cust-total">£0.00</div>
+    </div>
+    <button class="btn btn-p" onclick="addCustomToBasket()">✓ Add to Basket</button>
+  </div>
+</div>
+
 <!-- IMPORT CHOICE MODAL -->
 <div class="ov" id="mo-import">
   <div class="mo" style="max-width:500px">
     <button class="mclose" onclick="closeMo('mo-import')">✕</button>
     <h2>⬆ Import — Choose Mode</h2>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:18px;">
       File: <strong style="color:var(--text)" id="import-filename">backup.json</strong>
       &nbsp;·&nbsp; <span id="import-fileinfo"></span>
     </div>
-
     <div class="import-opt" onclick="doImport('merge')">
       <h3>✅ Merge — Add new products only</h3>
-      <p>Products from the file that <strong>don't already exist</strong> in your inventory are added. Your existing products, stock levels, and all sales history are <strong>completely safe</strong>.</p>
-      <p style="margin-top:6px">Matched by barcode — if a barcode already exists, that product is skipped.</p>
-      <span class="import-badge badge-green">✔ RECOMMENDED — Safe, nothing deleted</span>
+      <p>Products not already in your inventory are added. Existing products, stock levels, and all sales are <strong>kept safe</strong>. Matched by barcode.</p>
+      <span class="import-badge badge-green">✔ RECOMMENDED — Nothing deleted</span>
     </div>
-
     <div class="import-opt" onclick="doImport('overwrite-products')">
       <h3>🔄 Merge + Update existing</h3>
-      <p>New products are <strong>added</strong>. Products already in your inventory (matched by barcode) get their <strong>name, price, cost and category updated</strong> from the file.</p>
-      <p style="margin-top:6px">Current <strong>stock quantities are kept</strong>. Sales history is kept.</p>
-      <span class="import-badge badge-orange">✔ Safe for price/name updates</span>
+      <p>New products added. Existing products (matched by barcode) get their name/price/cost/category updated. <strong>Stock quantities kept</strong>.</p>
+      <span class="import-badge badge-orange">✔ Safe for price updates</span>
     </div>
-
     <div class="import-opt danger-opt" onclick="doImport('replace')">
       <h3 style="color:var(--danger)">⚠ Replace Everything</h3>
-      <p>All current products, sales history and settings will be <strong>permanently deleted</strong> and replaced with the file contents.</p>
+      <p>All current products, sales and settings will be permanently deleted and replaced.</p>
       <span class="import-badge badge-red">⚠ DESTRUCTIVE — Cannot be undone</span>
     </div>
   </div>
@@ -576,10 +640,7 @@ tr:hover td{background:var(--surface2);}
     <button class="mclose" onclick="closeScanner()">✕</button>
     <h2 id="sc-title">📷 Camera Scanner</h2>
     <div id="sc-badge"></div>
-    <div class="vwrap">
-      <video id="sv" autoplay playsinline muted></video>
-      <div class="sov"><div class="sfr"><div class="scan-line"></div></div></div>
-    </div>
+    <div class="vwrap"><video id="sv" autoplay playsinline muted></video><div class="sov"><div class="sfr"><div class="scan-line"></div></div></div></div>
     <div class="sres" id="sres">Point camera at a barcode…</div>
     <div class="manwrap" id="manwrap" style="display:none">
       <input class="si" id="manbc" placeholder="Type barcode then press Enter" style="width:100%"
@@ -594,12 +655,8 @@ tr:hover td{background:var(--surface2);}
       <div id="sipl" style="color:var(--text2);font-size:12px">Scan a product…</div>
       <div id="sipq">+0</div>
       <div class="snp">
-        <button class="snb" onclick="siAdj(1)">+1</button>
-        <button class="snb" onclick="siAdj(5)">+5</button>
-        <button class="snb" onclick="siAdj(10)">+10</button>
-        <button class="snb" onclick="siAdj(-1)">−1</button>
-        <button class="snb del" onclick="siReset()">Reset</button>
-        <button class="snb ok" onclick="siSave(false)">✓ Save</button>
+        <button class="snb" onclick="siAdj(1)">+1</button><button class="snb" onclick="siAdj(5)">+5</button><button class="snb" onclick="siAdj(10)">+10</button>
+        <button class="snb" onclick="siAdj(-1)">−1</button><button class="snb del" onclick="siReset()">Reset</button><button class="snb ok" onclick="siSave(false)">✓ Save</button>
       </div>
       <div style="font-size:10px;color:var(--text2);text-align:center;margin-top:7px">Scan another to switch, or tap ✓ Save</div>
     </div>
@@ -633,12 +690,8 @@ tr:hover td{background:var(--surface2);}
     <div id="cash-sec">
       <div class="cash-in"><label>Cash Tendered</label><input type="number" id="cashamt" placeholder="0.00" oninput="calcChg()"></div>
       <div class="np">
-        <button class="npb" onclick="np2('5')">£5</button>
-        <button class="npb" onclick="np2('10')">£10</button>
-        <button class="npb" onclick="np2('20')">£20</button>
-        <button class="npb" onclick="np2('50')">£50</button>
-        <button class="npb" onclick="np2('exact')">Exact</button>
-        <button class="npb del" onclick="np2('del')">⌫</button>
+        <button class="npb" onclick="np2('5')">£5</button><button class="npb" onclick="np2('10')">£10</button><button class="npb" onclick="np2('20')">£20</button>
+        <button class="npb" onclick="np2('50')">£50</button><button class="npb" onclick="np2('exact')">Exact</button><button class="npb del" onclick="np2('del')">⌫</button>
       </div>
     </div>
     <div class="chg" id="chg-sec" style="display:none"><div class="lbl">Change</div><div class="amt" id="chgamt"></div></div>
@@ -653,7 +706,7 @@ tr:hover td{background:var(--surface2);}
     <h2>🧾 Receipt</h2>
     <div id="rec-c"></div>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <button class="btn btn-p" onclick="thermalPrint('sale')" style="flex:1;min-width:120px">🖨 Print Receipt</button>
+      <button class="btn btn-p" onclick="thermalPrint('sale')" style="flex:1;min-width:120px">🖨 Print</button>
       <button class="btn btn-s" onclick="dlPDF()" style="flex:1;min-width:120px">⬇ PDF</button>
       <button class="btn btn-s" onclick="closeMo('mo-rec')" style="flex:1;min-width:80px">Done</button>
     </div>
@@ -662,17 +715,26 @@ tr:hover td{background:var(--surface2);}
 
 <!-- ITEM MODAL -->
 <div class="ov" id="mo-item">
-  <div class="mo" style="max-width:540px">
+  <div class="mo" style="max-width:560px">
     <button class="mclose" onclick="closeMo('mo-item')">✕</button>
     <h2 id="item-title">➕ Add Item</h2>
     <input type="hidden" id="iid">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="fr" style="grid-column:1/-1"><label>Name *</label><input id="iname" placeholder="e.g. Badami Biscuits"></div>
+      <div class="fr" style="grid-column:1/-1"><label>Name *</label><input id="iname" placeholder="e.g. Salmon Fillet"></div>
       <div class="fr"><label>Price *</label><input id="iprice" type="number" step="0.01" placeholder="0.00"></div>
+      <div class="fr">
+        <label>Sold by</label>
+        <select id="iunit" onchange="toggleStockLabel()">
+          <option value="each">each (fixed price)</option>
+          <option value="kg">per kg (weight)</option>
+          <option value="g">per 100g (weight)</option>
+          <option value="lb">per lb (weight)</option>
+        </select>
+      </div>
       <div class="fr"><label>Cost Price</label><input id="icost" type="number" step="0.01" placeholder="0.00"></div>
-      <div class="fr"><label>Stock *</label><input id="istock" type="number" placeholder="0"></div>
+      <div class="fr"><label id="istock-label">Stock *</label><input id="istock" type="number" placeholder="0"></div>
       <div class="fr"><label>Low Stock Alert</label><input id="ilows" type="number" placeholder="5"></div>
-      <div class="fr"><label>Category</label><input id="icat" placeholder="e.g. Snacks"></div>
+      <div class="fr"><label>Category</label><input id="icat" placeholder="e.g. Fish"></div>
       <div class="fr">
         <label>Barcode <span style="color:var(--accent2);font-size:10px">— tap 📷 or USB scan</span></label>
         <div style="display:flex;gap:5px">
@@ -680,8 +742,13 @@ tr:hover td{background:var(--surface2);}
           <button class="bsm" style="padding:8px 10px" onclick="openScanner('assign-barcode')">📷</button>
         </div>
       </div>
-      <div class="fr"><label>Emoji</label><input id="iemoji" placeholder="📦" maxlength="4"></div>
+      <div class="fr"><label>Emoji</label><input id="iemoji" placeholder="🐟" maxlength="4"></div>
       <div class="fr" style="grid-column:1/-1"><label>Description</label><input id="idesc" placeholder="Optional"></div>
+    </div>
+    <!-- Weight product info box -->
+    <div id="weight-info-box" style="display:none;background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.3);border-radius:10px;padding:12px;margin-top:12px;font-size:12px;color:var(--brand);line-height:1.6;">
+      ⚖ <strong>Weight product:</strong> When added to the basket, a keypad will appear to enter the weight. The price is automatically calculated.<br>
+      Stock field = stock in kg (or leave 0 for unlimited). For weight items the basket shows the exact weight and price.
     </div>
     <button class="btn btn-p" onclick="saveItem()" style="margin-top:14px">💾 Save Item</button>
   </div>
@@ -701,9 +768,7 @@ tr:hover td{background:var(--surface2);}
   </div>
 </div>
 
-<div id="thermal-print-frame">
-  <div class="thermal-receipt" id="thermal-content"></div>
-</div>
+<div id="thermal-print-frame"><div class="thermal-receipt" id="thermal-content"></div></div>
 <div id="toasts" style="position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:6px;pointer-events:none;"></div>
 
 <script>
@@ -714,23 +779,16 @@ let hidBuffer='',hidLastTime=0,hidTimer=null;
 function getHIDSpeed(){return parseInt(localStorage.getItem('hid-speed')||'80');}
 document.addEventListener('keydown',function(e){
   if(e.ctrlKey||e.altKey||e.metaKey)return;
-  const isSearchBar=(e.target.id==='psearch');
   const now=Date.now(),gap=now-hidLastTime;
   hidLastTime=now;
   if(gap>getHIDSpeed()&&hidBuffer.length>0)hidBuffer='';
   if(e.key==='Enter'){
-    if(hidBuffer.length>=3){
-      const code=hidBuffer.trim();hidBuffer='';clearTimeout(hidTimer);
-      e.preventDefault();handleHIDScan(code);return;
-    }
+    if(hidBuffer.length>=3){const code=hidBuffer.trim();hidBuffer='';clearTimeout(hidTimer);e.preventDefault();handleHIDScan(code);return;}
     hidBuffer='';return;
   }
   if(e.key.length===1){
     hidBuffer+=e.key;clearTimeout(hidTimer);
-    hidTimer=setTimeout(()=>{
-      if(hidBuffer.length>=6){const code=hidBuffer.trim();hidBuffer='';handleHIDScan(code);}
-      else hidBuffer='';
-    },300);
+    hidTimer=setTimeout(()=>{if(hidBuffer.length>=6){const code=hidBuffer.trim();hidBuffer='';handleHIDScan(code);}else hidBuffer='';},300);
   }
 });
 function handleHIDScan(code){
@@ -738,11 +796,13 @@ function handleHIDScan(code){
   const pid=document.querySelector('.page.on')?.id||'';
   if(pid==='pg-checkout'){
     const p=db.products.find(x=>x.barcode===code);
-    if(p){addToBasket(p.id);toast(`📷 ${p.emoji} ${p.name}`);}
-    else toast(`Barcode not found: ${code}`,'warning');
+    if(p){
+      if(isWeightProduct(p)){openWeightModal(p.id);}
+      else{addToBasket(p.id);toast(`📷 ${p.emoji} ${p.name}`);}
+    }else toast(`Barcode not found: ${code}`,'warning');
   }else if(pid==='pg-inv'){
     const p=db.products.find(x=>x.barcode===code);
-    if(p){const el=document.getElementById('invsearch');if(el){el.value=p.barcode;renderInv();}setTimeout(()=>flashRow(p.id),80);toast(`📦 ${p.name} (Stock: ${p.stock})`);}
+    if(p){const el=document.getElementById('invsearch');if(el){el.value=p.barcode;renderInv();}setTimeout(()=>flashRow(p.id),80);toast(`📦 ${p.name}`);}
     else toast(`Not in inventory: ${code}`,'warning');
   }else if(document.getElementById('mo-item').classList.contains('on')){
     document.getElementById('ibarcode').value=code;toast(`Barcode captured: ${code}`);
@@ -761,24 +821,20 @@ const PDF=(function(){
     function build(){
       const body=content.join('\n');let pdf='%PDF-1.4\n';const offs=[];
       function obj(n,s){offs[n]=pdf.length;pdf+=`${n} 0 obj\n${s}\nendobj\n`;}
-      obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
-      obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+      obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
       const stream=`q 0.5 w\n${body}\nQ`;
       const fN='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
       const fB='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
       obj(3,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents 4 0 R /Resources << /Font << /FN ${fN} /FB ${fB} >> >> >>`);
       obj(4,`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-      const xref=pdf.length;
-      pdf+=`xref\n0 ${offs.length+1}\n0000000000 65535 f \n`;
+      const xref=pdf.length;pdf+=`xref\n0 ${offs.length+1}\n0000000000 65535 f \n`;
       offs.forEach(o=>pdf+=`${String(o).padStart(10,'0')} 00000 n \n`);
-      pdf+=`trailer\n<< /Size ${offs.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-      return pdf;
+      pdf+=`trailer\n<< /Size ${offs.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;return pdf;
     }
     return{text,line,build,W,H};
   }
   function receipt(sale,settings){
-    const p=create();const C=settings.currency||'£';
-    const f=n=>`${C}${Number(n).toFixed(2)}`;
+    const p=create();const C=settings.currency||'£';const f=n=>`${C}${Number(n).toFixed(2)}`;
     let y=30;
     const center=(t,s,bold)=>p.text(t,Math.max(4,(p.W-t.length*s*0.6)/2),y,s,bold);
     const lr=(l,r,s,bold)=>{p.text(l,8,y,s,bold);p.text(String(r),p.W-8-String(r).length*s*0.55,y,s,bold);};
@@ -787,10 +843,10 @@ const PDF=(function(){
     if(settings.phone){center(settings.phone,7,false);y+=10;}
     if(settings.vat){center('VAT: '+settings.vat,7,false);y+=10;}
     y+=4;p.line(8,y,p.W-8,y);y+=8;
-    lr('Receipt #',sale.id.replace('REC-',''),7,false);y+=10;
     const d=new Date(sale.date);
     const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yyyy=d.getFullYear();
     const hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
+    lr('Receipt #',sale.id.replace('REC-',''),7,false);y+=10;
     lr('Date',`${dd}/${mm}/${yyyy}`,7,false);y+=10;
     lr('Time',`${hh}:${mi}`,7,false);y+=10;
     lr('Payment',sale.payMethod.toUpperCase(),7,false);y+=8;
@@ -798,41 +854,34 @@ const PDF=(function(){
     sale.items.forEach(it=>{
       const nm=(it.name||'').substring(0,22);const pr=f(it.price*it.qty);
       p.text(nm,8,y,7.5,true);y+=10;
-      p.text(`  ${it.qty} x ${f(it.price)}`,8,y,7,false);
-      p.text(pr,p.W-8-pr.length*4,y,7,true);y+=10;
+      const desc=it.isWeight?`  ${it.weightDisplay}`:(`  ${it.qty} x ${f(it.price)}`);
+      p.text(desc.substring(0,30),8,y,7,false);p.text(pr,p.W-8-pr.length*4,y,7,true);y+=10;
     });
     p.line(8,y,p.W-8,y);y+=8;
     if(sale.discPct>0){lr(`Discount ${sale.discPct}%`,`-${f(sale.discount)}`,7,false);y+=9;}
     y+=2;p.line(8,y,p.W-8,y);y+=2;p.line(8,y,p.W-8,y);y+=8;
     lr('TOTAL',f(sale.total),10,true);y+=14;
     if(sale.payMethod==='cash'){lr('Cash',f(sale.total+sale.change),7,false);y+=9;lr('Change',f(sale.change),7,true);y+=9;}
-    p.line(8,y,p.W-8,y);y+=8;
-    if(settings.footer){center(settings.footer,7,false);}
+    p.line(8,y,p.W-8,y);y+=8;if(settings.footer){center(settings.footer,7,false);}
     return p.build();
   }
   function eodPDF(data,settings){
-    const p=create();const C=settings.currency||'£';
-    const f=n=>`${C}${Number(n).toFixed(2)}`;
+    const p=create();const C=settings.currency||'£';const f=n=>`${C}${Number(n).toFixed(2)}`;
     let y=30;
     const center=(t,s,bold)=>p.text(t,Math.max(4,(p.W-t.length*s*0.6)/2),y,s,bold);
     const lr=(l,r,s,bold)=>{p.text(l,8,y,s,bold);p.text(String(r),p.W-8-String(r).length*s*0.55,y,s,bold);};
-    center(settings.name||'FLASHPOINT',12,true);y+=16;
-    center(data.date,9,true);y+=12;
+    center(settings.name||'FLASHPOINT',12,true);y+=16;center(data.date,9,true);y+=12;
     if(settings.address){center(settings.address,7,false);y+=10;}
     p.line(8,y,p.W-8,y);y+=10;
-    lr('Cash Sales:',f(data.cash),8,false);y+=12;
-    lr('Card Sales:',f(data.card),8,false);y+=12;
+    lr('Cash Sales:',f(data.cash),8,false);y+=12;lr('Card Sales:',f(data.card),8,false);y+=12;
     lr('Expenses:','- '+f(data.expenses),8,false);y+=12;
     p.line(8,y,p.W-8,y);y+=2;p.line(8,y,p.W-8,y);y+=12;
-    lr('NET TOTAL:',f(data.net),11,true);y+=16;
-    p.line(8,y,p.W-8,y);y+=10;
-    lr('Till Left:',f(data.till),8,false);
+    lr('NET TOTAL:',f(data.net),11,true);y+=16;p.line(8,y,p.W-8,y);y+=10;lr('Till Left:',f(data.till),8,false);
     return p.build();
   }
   function dl(content,filename){
     const blob=new Blob([content],{type:'application/pdf'});
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   }
   return{receipt,eodPDF,dl};
@@ -846,19 +895,23 @@ let basket=[],payMethod='cash',activeCat='All',curSaleId=null;
 let stream=null,torchOn=false,detector=null,scanLoop=null,scanMode='checkout';
 let siProdId=null,siDelta=0,foundId=null;
 let pendingImportData=null;
+// Category order (saved to db.settings)
+let catOrder=[];
+// Weight modal state
+let weightProdId=null,weightStr='0',weightUnit='kg';
 
 const DEF={name:'Bazro',address:'9a Commercial Street, Camborne, TR14',phone:'07534100986',email:'',vat:'',footer:'Thank you!',currency:'£'};
 const SAMPLES=[
-  {id:'p1',name:'Badami Biscuits',price:2.45,cost:1.00,stock:24,lowStock:5,category:'Snacks',barcode:'5012345600001',emoji:'🍪'},
-  {id:'p2',name:'Organic Milk 1L',price:1.29,cost:.60,stock:24,lowStock:5,category:'Dairy',barcode:'5012345600002',emoji:'🥛'},
-  {id:'p3',name:'Sourdough Bread',price:2.49,cost:1.10,stock:8,lowStock:3,category:'Bakery',barcode:'5012345600003',emoji:'🍞'},
-  {id:'p4',name:'Free Range Eggs 6pk',price:1.99,cost:.90,stock:12,lowStock:4,category:'Dairy',barcode:'5012345600004',emoji:'🥚'},
-  {id:'p5',name:'Cheddar Cheese 400g',price:3.49,cost:1.80,stock:3,lowStock:5,category:'Dairy',barcode:'5012345600005',emoji:'🧀'},
-  {id:'p6',name:'Orange Juice 1L',price:1.79,cost:.80,stock:0,lowStock:5,category:'Drinks',barcode:'5012345600006',emoji:'🍊'},
-  {id:'p7',name:'Chicken Breast 500g',price:4.99,cost:2.50,stock:15,lowStock:5,category:'Meat',barcode:'5012345600007',emoji:'🍗'},
-  {id:'p8',name:'Pasta 500g',price:.89,cost:.30,stock:30,lowStock:10,category:'Pantry',barcode:'5012345600008',emoji:'🍝'},
-  {id:'p9',name:'Sparkling Water 1.5L',price:.79,cost:.25,stock:40,lowStock:10,category:'Drinks',barcode:'5012345600009',emoji:'💧'},
-  {id:'p10',name:'Greek Yoghurt 500g',price:2.29,cost:1.00,stock:7,lowStock:5,category:'Dairy',barcode:'5012345600010',emoji:'🥣'},
+  {id:'p1',name:'Badami Biscuits',price:2.45,cost:1.00,stock:24,lowStock:5,category:'Snacks',barcode:'5012345600001',emoji:'🍪',unit:'each'},
+  {id:'p2',name:'Organic Milk 1L',price:1.29,cost:.60,stock:24,lowStock:5,category:'Dairy',barcode:'5012345600002',emoji:'🥛',unit:'each'},
+  {id:'p3',name:'Sourdough Bread',price:2.49,cost:1.10,stock:8,lowStock:3,category:'Bakery',barcode:'5012345600003',emoji:'🍞',unit:'each'},
+  {id:'p4',name:'Salmon Fillet',price:12.00,cost:6.00,stock:5,lowStock:2,category:'Fish',barcode:'5012345600004',emoji:'🐟',unit:'kg'},
+  {id:'p5',name:'Chicken Breast',price:8.00,cost:4.00,stock:10,lowStock:3,category:'Meat',barcode:'5012345600005',emoji:'🍗',unit:'kg'},
+  {id:'p6',name:'Orange Juice 1L',price:1.79,cost:.80,stock:0,lowStock:5,category:'Drinks',barcode:'5012345600006',emoji:'🍊',unit:'each'},
+  {id:'p7',name:'Potatoes',price:1.50,cost:.60,stock:20,lowStock:5,category:'Veg',barcode:'5012345600007',emoji:'🥔',unit:'kg'},
+  {id:'p8',name:'Tomatoes',price:2.00,cost:.80,stock:15,lowStock:5,category:'Veg',barcode:'5012345600008',emoji:'🍅',unit:'kg'},
+  {id:'p9',name:'Sparkling Water 1.5L',price:.79,cost:.25,stock:40,lowStock:10,category:'Drinks',barcode:'5012345600009',emoji:'💧',unit:'each'},
+  {id:'p10',name:'Greek Yoghurt 500g',price:2.29,cost:1.00,stock:7,lowStock:5,category:'Dairy',barcode:'5012345600010',emoji:'🥣',unit:'each'},
 ];
 
 function loadDB(){
@@ -870,16 +923,24 @@ function loadDB(){
       if(!db.sales)db.sales=[];
       if(!db.settings)db.settings={...DEF};
       if(!db.eodRecords)db.eodRecords=[];
-      // Remove tax from settings — no longer used
       delete db.settings.tax;
+      // Ensure all products have a unit field
+      db.products.forEach(p=>{if(!p.unit)p.unit='each';});
+      // Load category order
+      catOrder=db.settings.catOrder||[];
     }else{
       db={products:[...SAMPLES.map(x=>({...x}))],sales:[],settings:{...DEF},eodRecords:[]};
+      catOrder=[];
     }
   }catch(e){
     db={products:[...SAMPLES.map(x=>({...x}))],sales:[],settings:{...DEF},eodRecords:[]};
+    catOrder=[];
   }
 }
-function saveDB(){try{localStorage.setItem('bazro5',JSON.stringify(db));}catch(e){}}
+function saveDB(){
+  db.settings.catOrder=catOrder;
+  try{localStorage.setItem('bazro5',JSON.stringify(db));}catch(e){}
+}
 
 // ══════════════════════════════════════
 //  UTILS
@@ -887,6 +948,7 @@ function saveDB(){try{localStorage.setItem('bazro5',JSON.stringify(db));}catch(e
 const C=()=>db.settings.currency||'£';
 const fmt=n=>`${C()}${Number(n).toFixed(2)}`;
 const uid=()=>'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+const isWeightProduct=p=>p&&(p.unit==='kg'||p.unit==='g'||p.unit==='lb');
 
 function toast(msg,type='success'){
   const d=document.createElement('div');
@@ -902,11 +964,8 @@ function showPage(pg){
   document.getElementById('pg-'+pg).classList.add('on');
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   document.querySelector(`.nb[data-pg="${pg}"]`).classList.add('on');
-  if(pg==='inv')renderInv();
-  if(pg==='hist')renderHist();
-  if(pg==='rep')renderRep();
-  if(pg==='eod'){initEOD();renderEODHistory();}
-  if(pg==='set')loadSet();
+  if(pg==='inv')renderInv();if(pg==='hist')renderHist();if(pg==='rep')renderRep();
+  if(pg==='eod'){initEOD();renderEODHistory();}if(pg==='set')loadSet();
 }
 document.querySelectorAll('.nb').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.pg)));
 function updateClock(){
@@ -917,105 +976,567 @@ function updateClock(){
 setInterval(updateClock,1000);updateClock();
 
 // ══════════════════════════════════════
-//  IMPORT — SMART MERGE (KEY FIX)
+//  WEIGHT MODAL
 // ══════════════════════════════════════
-function promptImport(event){
-  const file=event.target.files[0];
-  if(!file)return;
-  event.target.value='';
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!data.products&&!data.sales){toast('Invalid backup file','error');return;}
-      pendingImportData=data;
-      document.getElementById('import-filename').textContent=`"${file.name}"`;
-      const incomingCount=(data.products||[]).length;
-      document.getElementById('import-fileinfo').textContent=
-        `${incomingCount} product${incomingCount!==1?'s':''} in file · ${db.products.length} in current inventory`;
-      document.getElementById('mo-import').classList.add('on');
-    }catch(err){toast('Cannot read file — must be a valid JSON backup','error');}
-  };
-  reader.readAsText(file);
+function openWeightModal(productId){
+  weightProdId=productId;
+  weightStr='0';
+  weightUnit='kg';
+  const p=db.products.find(x=>x.id===productId);
+  if(!p)return;
+  // Default unit to product's unit
+  if(p.unit==='g'){weightUnit='g';}
+  else if(p.unit==='lb'){weightUnit='lb';}
+  else{weightUnit='kg';}
+  document.getElementById('wmo-title').textContent=`⚖ ${p.name}`;
+  document.getElementById('wmo-subtitle').textContent=`${fmt(p.price)} per ${p.unit}`;
+  updateWeightDisplay();
+  document.getElementById('mo-weight').classList.add('on');
+}
+function setWeightUnit(u){
+  weightUnit=u;
+  weightStr='0';
+  document.getElementById('wunit-kg').classList.toggle('on',u==='kg');
+  document.getElementById('wunit-g').classList.toggle('on',u==='g');
+  updateWeightDisplay();
+}
+function wkp(k){
+  if(k==='del'){
+    weightStr=weightStr.length>1?weightStr.slice(0,-1):'0';
+  }else if(k==='.'){
+    if(!weightStr.includes('.'))weightStr+='.';
+  }else if(k==='ok'){
+    const w=parseFloat(weightStr)||0;
+    if(w<=0){toast('Enter a weight','warning');return;}
+    const p=db.products.find(x=>x.id===weightProdId);
+    if(!p)return;
+    // Convert entered weight to kg for price calc
+    let kg=w;
+    if(weightUnit==='g')kg=w/1000;
+    if(weightUnit==='lb')kg=w*0.453592;
+    // Price based on product unit
+    let price=0;
+    if(p.unit==='kg')price=p.price*kg;
+    else if(p.unit==='g')price=p.price*(kg*10); // per 100g
+    else if(p.unit==='lb')price=p.price*(w);
+    else price=p.price;
+    const weightDisplay=`${w}${weightUnit}`;
+    addWeightToBasket(p,price,weightDisplay,w,weightUnit);
+    closeMo('mo-weight');
+    return;
+  }else{
+    if(weightStr==='0'&&k!=='.')weightStr=k;
+    else weightStr+=k;
+    // Max 6 chars
+    if(weightStr.length>7)weightStr=weightStr.slice(0,7);
+  }
+  updateWeightDisplay();
+}
+function updateWeightDisplay(){
+  document.getElementById('wdisplay').textContent=weightStr;
+  document.getElementById('wunit-label').textContent=weightUnit;
+  const p=db.products.find(x=>x.id===weightProdId);
+  if(!p){document.getElementById('wamt-display').textContent='£0.00';return;}
+  const w=parseFloat(weightStr)||0;
+  let price=0;
+  let kg=w;
+  if(weightUnit==='g')kg=w/1000;
+  if(weightUnit==='lb')kg=w*0.453592;
+  if(p.unit==='kg')price=p.price*kg;
+  else if(p.unit==='g')price=p.price*(kg*10);
+  else if(p.unit==='lb')price=p.price*w;
+  else price=p.price;
+  document.getElementById('wamt-display').textContent=fmt(price);
+}
+function addWeightToBasket(p,totalPrice,weightDisplay,weightVal,wUnit){
+  // Weight items always added as new line (never qty-merged, each weighing is separate)
+  basket.push({
+    id:p.id,
+    name:p.name,
+    price:totalPrice,   // total price for this weight
+    qty:1,
+    emoji:p.emoji||'⚖',
+    isWeight:true,
+    weightDisplay,      // e.g. "0.5kg"
+    weightVal,
+    weightUnit:wUnit,
+    pricePerUnit:p.price,
+    unitType:p.unit
+  });
+  renderBasket();
+  toast(`${p.emoji} ${p.name} ${weightDisplay} — ${fmt(totalPrice)}`);
 }
 
-function doImport(mode){
-  closeMo('mo-import');
-  if(!pendingImportData){toast('No file loaded','error');return;}
-  const data=pendingImportData;
-  pendingImportData=null;
+// ══════════════════════════════════════
+//  CUSTOM PRODUCT
+// ══════════════════════════════════════
+function openCustomProduct(){
+  document.getElementById('cust-name').value='';
+  document.getElementById('cust-price').value='';
+  document.getElementById('cust-qty').value='1';
+  document.getElementById('cust-unit').value='each';
+  document.getElementById('cust-total').textContent=fmt(0);
+  document.getElementById('cust-calc-label').textContent='Total';
+  document.getElementById('mo-custom').classList.add('on');
+  setTimeout(()=>document.getElementById('cust-name').focus(),100);
+}
+function calcCustomAmt(){
+  const price=parseFloat(document.getElementById('cust-price').value)||0;
+  const qty=parseFloat(document.getElementById('cust-qty').value)||0;
+  const unit=document.getElementById('cust-unit').value;
+  let total=0,label='Total';
+  if(unit==='each'){total=price*qty;label=qty!==1?`${qty} × ${fmt(price)}`:'Total';}
+  else if(unit==='kg'){total=price*qty;label=`${qty}kg × ${fmt(price)}/kg`;}
+  else if(unit==='g'){total=price*(qty/100);label=`${qty}g @ ${fmt(price)}/100g`;}
+  else if(unit==='lb'){total=price*qty;label=`${qty}lb × ${fmt(price)}/lb`;}
+  document.getElementById('cust-total').textContent=fmt(total);
+  document.getElementById('cust-calc-label').textContent=label;
+}
+function addCustomToBasket(){
+  const name=document.getElementById('cust-name').value.trim();
+  const price=parseFloat(document.getElementById('cust-price').value)||0;
+  const qty=parseFloat(document.getElementById('cust-qty').value)||1;
+  const unit=document.getElementById('cust-unit').value;
+  if(!name){toast('Enter item name','warning');return;}
+  if(price<=0){toast('Enter a price','warning');return;}
+  let total=0,weightDisplay='',isWeight=false;
+  if(unit==='each'){total=price*qty;}
+  else if(unit==='kg'){total=price*qty;weightDisplay=`${qty}kg`;isWeight=true;}
+  else if(unit==='g'){total=price*(qty/100);weightDisplay=`${qty}g`;isWeight=true;}
+  else if(unit==='lb'){total=price*qty;weightDisplay=`${qty}lb`;isWeight=true;}
+  basket.push({
+    id:'custom-'+Date.now(),
+    name,
+    price:total,
+    qty:1,
+    emoji:'✏️',
+    isWeight,
+    isCustom:true,
+    weightDisplay:isWeight?weightDisplay:'',
+    pricePerUnit:price,
+    unitType:unit
+  });
+  renderBasket();
+  closeMo('mo-custom');
+  toast(`✏️ ${name} added — ${fmt(total)}`);
+}
 
-  if(mode==='replace'){
-    if(!confirm('⚠️ This will DELETE all current products, sales and settings. Are you sure?'))return;
-    db={
-      products:data.products||[],
-      sales:data.sales||[],
-      settings:data.settings||{...DEF},
-      eodRecords:data.eodRecords||[]
-    };
-    // Remove tax from imported settings too
-    delete db.settings.tax;
-    saveDB();renderInv();renderCats();renderProds();
-    toast(`Replaced everything — ${(data.products||[]).length} products loaded`);
+// ══════════════════════════════════════
+//  CATEGORIES — DRAGGABLE ORDER
+// ══════════════════════════════════════
+function getOrderedCats(){
+  const all=[...new Set(db.products.map(p=>p.category).filter(Boolean))];
+  // Remove 'Custom' from normal list — it'll be appended last
+  const filtered=all.filter(c=>c!=='Custom');
+  // Sort by saved order, then alphabetically for new ones
+  const ordered=[];
+  catOrder.forEach(c=>{if(filtered.includes(c))ordered.push(c);});
+  filtered.forEach(c=>{if(!ordered.includes(c))ordered.push(c);});
+  return ordered;
+}
+
+let dragSrcCat=null;
+function renderCats(){
+  const cats=getOrderedCats();
+  const el=document.getElementById('cats');
+  // Build buttons
+  let html=`<button class="cb ${activeCat==='All'?'on':''}" data-cat="All" onclick="setCat('All')">All</button>`;
+  cats.forEach(c=>{
+    html+=`<button class="cb ${activeCat===c?'on':''}" data-cat="${c}"
+      draggable="true"
+      onclick="setCat('${c}')"
+      ondragstart="catDragStart(event,'${c}')"
+      ondragover="catDragOver(event)"
+      ondrop="catDrop(event,'${c}')"
+      ondragend="catDragEnd(event)"
+      ondragleave="catDragLeave(event)"
+    >${c}</button>`;
+  });
+  // Custom always last
+  html+=`<button class="cb custom-cat ${activeCat==='Custom'?'on':''}" data-cat="Custom" onclick="setCat('Custom')">✏️ Custom</button>`;
+  html+=`<span class="cat-drag-hint" title="Drag categories to reorder">⠿ drag to reorder</span>`;
+  el.innerHTML=html;
+}
+function catDragStart(e,cat){
+  dragSrcCat=cat;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+}
+function catDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('drag-over');
+}
+function catDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function catDrop(e,targetCat){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(!dragSrcCat||dragSrcCat===targetCat||targetCat==='All'||targetCat==='Custom')return;
+  const ordered=getOrderedCats();
+  const fromIdx=ordered.indexOf(dragSrcCat);
+  const toIdx=ordered.indexOf(targetCat);
+  if(fromIdx<0||toIdx<0)return;
+  ordered.splice(fromIdx,1);ordered.splice(toIdx,0,dragSrcCat);
+  catOrder=[...ordered];
+  saveDB();renderCats();
+}
+function catDragEnd(e){document.querySelectorAll('.cb').forEach(b=>{b.classList.remove('dragging');b.classList.remove('drag-over');});}
+
+function setCat(c){activeCat=c;renderCats();renderProds();}
+
+// ══════════════════════════════════════
+//  CHECKOUT — PRODUCTS
+// ══════════════════════════════════════
+function renderProds(){
+  const q=document.getElementById('psearch').value.toLowerCase();
+  const g=document.getElementById('pgrid');
+  let ps=db.products;
+  if(activeCat==='All'){}
+  else if(activeCat==='Custom'){
+    // Show only custom products (none from inventory — just the add custom button card)
+    g.innerHTML=`
+      <div class="pc custom-prod" onclick="openCustomProduct()" style="align-items:center;justify-content:center;min-height:120px;text-align:center;gap:8px;">
+        <div style="font-size:32px">✏️</div>
+        <div class="pn">Add Custom Item</div>
+        <div style="font-size:11px;color:var(--text2)">Price, weight or quantity</div>
+      </div>`;
     return;
+  }else{
+    ps=ps.filter(p=>p.category===activeCat);
   }
+  if(q)ps=ps.filter(p=>p.name.toLowerCase().includes(q)||(p.barcode||'').includes(q)||(p.category||'').toLowerCase().includes(q));
+  let html='';
+  if(!ps.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><p>No products</p></div>`;return;}
+  html+=ps.map(p=>{
+    const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';
+    const sl=p.stock<=0?'Out of Stock':p.stock<=(p.lowStock||5)?`Low: ${p.stock}${p.unit!=='each'?p.unit:''}`:isWeightProduct(p)?`${p.stock}kg in stock`:`${p.stock} in stock`;
+    const cc=(p.stock<=0&&!isWeightProduct(p))?'out-s':(p.stock<=(p.lowStock||5)&&!isWeightProduct(p))?'low-s':'';
+    const wClass=isWeightProduct(p)?'weight-prod':'';
+    const unitLabel=p.unit&&p.unit!=='each'?`/${p.unit}`:'';
+    return `<div class="pc ${cc} ${wClass}" onclick="${isWeightProduct(p)?`openWeightModal('${p.id}')`:`addToBasket('${p.id}')`}">
+      <div class="pe">${p.emoji||'📦'}</div>
+      <div class="pn">${p.name}</div>
+      ${p.unit&&p.unit!=='each'?`<span class="pc-unit-badge">⚖ per ${p.unit}</span>`:''}
+      <div class="pbc">${p.barcode||p.id}</div>
+      <div class="pp">${fmt(p.price)}${unitLabel}</div>
+      <span class="ps ${isWeightProduct(p)?'stk-ok':sc}">${isWeightProduct(p)?`Tap to weigh`:sl}</span>
+    </div>`;
+  }).join('');
+  g.innerHTML=html;
+}
 
-  if(mode==='merge'){
-    // SAFE: add only products that do NOT already exist
-    const incoming=data.products||[];
-    let added=0,skipped=0;
-    incoming.forEach(np=>{
-      // Match by barcode (primary) or by ID (fallback)
-      const existsByBarcode=np.barcode&&np.barcode.trim()&&db.products.some(p=>p.barcode&&p.barcode.trim()===np.barcode.trim());
-      const existsById=!existsByBarcode&&np.id&&db.products.some(p=>p.id===np.id);
-      if(existsByBarcode||existsById){
-        skipped++;
+function addToBasket(id){
+  const p=db.products.find(x=>x.id===id);
+  if(!p){return;}
+  if(isWeightProduct(p)){openWeightModal(id);return;}
+  if(p.stock<=0){toast('Out of stock!','warning');return;}
+  const ex=basket.find(b=>b.id===id&&!b.isWeight&&!b.isCustom);
+  if(ex){if(ex.qty>=p.stock){toast('No more stock!','warning');return;}ex.qty++;}
+  else basket.push({id:p.id,name:p.name,price:p.price,qty:1,emoji:p.emoji||'📦',isWeight:false,isCustom:false});
+  renderBasket();toast(`${p.emoji||'📦'} ${p.name} added`);
+}
+function removeItem(idx){basket.splice(idx,1);renderBasket();}
+function chgQty(idx,d){
+  const it=basket[idx];if(!it||it.isWeight||it.isCustom)return;
+  const p=db.products.find(x=>x.id===it.id);
+  it.qty=Math.max(1,Math.min(it.qty+d,p?p.stock:999));
+  renderBasket();
+}
+function clearBasket(){if(!basket.length)return;basket=[];document.getElementById('disc').value='';renderBasket();toast('Basket cleared','warning');}
+function clearDisc(){document.getElementById('disc').value='';renderBasket();}
+
+function getTotals(){
+  const sub=basket.reduce((s,b)=>s+b.price*b.qty,0);
+  const dp=parseFloat(document.getElementById('disc').value)||0;
+  const disc=sub*(dp/100);
+  const total=sub-disc;
+  return{sub,disc,dp,total};
+}
+
+function renderBasket(){
+  const el=document.getElementById('bitems');
+  document.getElementById('bcnt').textContent=basket.reduce((s,b)=>s+b.qty,0);
+  if(!basket.length){
+    el.innerHTML=`<div class="empty"><div class="ei">🛒</div><p>Empty basket</p><span>Tap a product or scan</span></div>`;
+  }else{
+    el.innerHTML=basket.map((it,idx)=>{
+      if(it.isWeight||it.isCustom){
+        // Weight/custom item — show name, weight/desc, price, delete (no qty controls)
+        const desc=it.isWeight?it.weightDisplay:(it.unitType!=='each'?`${it.pricePerUnit?fmt(it.pricePerUnit)+'/'+it.unitType:''}`:fmt(it.price));
+        return `<div class="bi">
+          <span style="font-size:18px">${it.emoji}</span>
+          <div class="bii">
+            <div class="bin">${it.name}</div>
+            <div class="bip">${it.isWeight?it.weightDisplay:desc}</div>
+          </div>
+          <div class="bit">${fmt(it.price*it.qty)}</div>
+          <button class="xb" onclick="removeItem(${idx})">✕</button>
+        </div>`;
       }else{
-        // Fresh ID to avoid any collision
-        db.products.push({...np,id:uid()});
-        added++;
+        return `<div class="bi">
+          <span style="font-size:18px">${it.emoji}</span>
+          <div class="bii"><div class="bin">${it.name}</div><div class="bip">${fmt(it.price)} each</div></div>
+          <div class="qc">
+            <button class="qb" onclick="chgQty(${idx},-1)">−</button>
+            <span class="qn">${it.qty}</span>
+            <button class="qb" onclick="chgQty(${idx},1)">+</button>
+          </div>
+          <div class="bit">${fmt(it.price*it.qty)}</div>
+          <button class="xb" onclick="removeItem(${idx})">✕</button>
+        </div>`;
       }
-    });
-    saveDB();renderInv();renderCats();renderProds();
-    toast(`✅ Merge done — ${added} new products added, ${skipped} already existed (kept)`);
-    return;
+    }).join('');
   }
+  const{sub,disc,dp,total}=getTotals();
+  document.getElementById('ts').textContent=fmt(sub);
+  document.getElementById('ttot').textContent=fmt(total);
+  const dr=document.getElementById('tdr');
+  if(dp>0){dr.style.display='flex';document.getElementById('td2').textContent=`-${fmt(disc)}`;}
+  else dr.style.display='none';
+}
 
-  if(mode==='overwrite-products'){
-    // Add new, update price/name/cost/category of existing (keep stock)
-    const incoming=data.products||[];
-    let added=0,updated=0;
-    incoming.forEach(np=>{
-      let idx=-1;
-      if(np.barcode&&np.barcode.trim())
-        idx=db.products.findIndex(p=>p.barcode&&p.barcode.trim()===np.barcode.trim());
-      if(idx===-1&&np.id)
-        idx=db.products.findIndex(p=>p.id===np.id);
+// ══════════════════════════════════════
+//  PAYMENT
+// ══════════════════════════════════════
+function openPay(){
+  if(!basket.length){toast('Basket is empty','warning');return;}
+  const{total}=getTotals();
+  document.getElementById('pay-amt').textContent=fmt(total);
+  document.getElementById('cashamt').value='';document.getElementById('chg-sec').style.display='none';
+  document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.pm')[0].classList.add('on');
+  payMethod='cash';document.getElementById('cash-sec').style.display='block';
+  document.getElementById('mo-pay').classList.add('on');
+}
+function selPay(m,el){
+  payMethod=m;document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+  document.getElementById('cash-sec').style.display=m==='cash'?'block':'none';document.getElementById('chg-sec').style.display='none';
+}
+function np2(v){
+  const inp=document.getElementById('cashamt');const{total}=getTotals();
+  if(v==='exact')inp.value=total.toFixed(2);else if(v==='del')inp.value=inp.value.slice(0,-1);else inp.value=v;calcChg();
+}
+function calcChg(){
+  const{total}=getTotals();const t=parseFloat(document.getElementById('cashamt').value)||0;
+  const cs=document.getElementById('chg-sec');
+  if(t>0){cs.style.display='block';const chg=t-total;document.getElementById('chgamt').textContent=fmt(Math.max(0,chg));document.getElementById('chgamt').style.color=chg<0?'var(--danger)':'var(--accent)';}
+  else cs.style.display='none';
+}
+function completeSale(){
+  const{sub,disc,dp,total}=getTotals();
+  if(payMethod==='cash'){const t=parseFloat(document.getElementById('cashamt').value)||0;if(t<total){toast('Cash less than total','error');return;}}
+  const id='REC-'+String(Date.now()).slice(-8);
+  const sale={id,date:new Date().toISOString(),items:basket.map(b=>({...b})),
+    subtotal:sub,discount:disc,discPct:dp,tax:0,total,payMethod,
+    change:payMethod==='cash'?(parseFloat(document.getElementById('cashamt').value)||0)-total:0};
+  // Reduce stock for non-weight, non-custom items only
+  basket.forEach(b=>{
+    if(!b.isWeight&&!b.isCustom){
+      const p=db.products.find(x=>x.id===b.id);if(p)p.stock=Math.max(0,p.stock-b.qty);
+    }
+  });
+  db.sales.unshift(sale);saveDB();closeMo('mo-pay');curSaleId=id;
+  basket=[];document.getElementById('disc').value='';
+  renderBasket();renderProds();toast(`Sale complete! ${fmt(total)}`);showReceipt(sale);
+}
 
-      if(idx>-1){
-        const ex=db.products[idx];
-        // Update info fields, KEEP stock and lowStock from current inventory
-        db.products[idx]={
-          ...ex,
-          name:np.name||ex.name,
-          price:np.price!==undefined?np.price:ex.price,
-          cost:np.cost!==undefined?np.cost:ex.cost,
-          category:np.category||ex.category,
-          emoji:np.emoji||ex.emoji,
-          desc:np.desc||ex.desc,
-          barcode:np.barcode||ex.barcode,
-          // stock, lowStock INTENTIONALLY preserved from existing
-        };
-        updated++;
-      }else{
-        db.products.push({...np,id:uid()});
-        added++;
-      }
-    });
-    saveDB();renderInv();renderCats();renderProds();
-    toast(`🔄 Merge+Update — ${added} added, ${updated} updated (stock kept)`);
-    return;
+// ══════════════════════════════════════
+//  RECEIPT
+// ══════════════════════════════════════
+function showReceipt(sale){
+  const s=db.settings;
+  const d=new Date(sale.date);
+  const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yyyy=d.getFullYear();
+  const hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
+  const lines=sale.items.map(it=>`
+    <div class="rr"><span style="font-weight:700">${it.emoji} ${it.name}${it.isCustom?' (custom)':''}</span></div>
+    <div class="rr">
+      <span style="padding-left:10px;color:#555">${it.isWeight?it.weightDisplay:(it.isCustom&&it.unitType!=='each'?`${it.weightDisplay||''}`:(`${it.qty} × ${fmt(it.price)}`))}  </span>
+      <span>${fmt(it.price*it.qty)}</span>
+    </div>`).join('');
+  document.getElementById('rec-c').innerHTML=`
+    <div class="rh"><h2>${s.name||'FLASHPOINT'}</h2>${s.address?`<p>${s.address}</p>`:''}${s.phone?`<p>${s.phone}</p>`:''}${s.vat?`<p>VAT: ${s.vat}</p>`:''}</div>
+    <hr class="rdiv">
+    <div class="rr"><span>Receipt #</span><span>${sale.id.replace('REC-','')}</span></div>
+    <div class="rr"><span>Date</span><span>${dd}/${mm}/${yyyy}</span></div>
+    <div class="rr"><span>Time</span><span>${hh}:${mi}</span></div>
+    <div class="rr"><span>Payment</span><span>${sale.payMethod.toUpperCase()}</span></div>
+    <hr class="rdiv">${lines}<hr class="rdiv">
+    ${sale.discPct>0?`<div class="rr"><span>Discount ${sale.discPct}%</span><span>-${fmt(sale.discount)}</span></div>`:''}
+    <hr class="rdiv">
+    <div class="rr rt"><span>TOTAL</span><span>${fmt(sale.total)}</span></div>
+    ${sale.payMethod==='cash'?`<div class="rr"><span>Cash</span><span>${fmt(sale.total+sale.change)}</span></div><div class="rr rt"><span>Change</span><span>${fmt(sale.change)}</span></div>`:''}
+    <hr class="rdiv"><p style="text-align:center;margin-top:6px">${s.footer||'Thank you!'}</p>`;
+  document.getElementById('mo-rec').classList.add('on');
+}
+function dlPDF(){
+  const sale=db.sales.find(x=>x.id===curSaleId);
+  if(!sale){toast('Sale not found','error');return;}
+  PDF.dl(PDF.receipt(sale,db.settings),`receipt-${sale.id}.pdf`);toast('PDF downloaded!');
+}
+
+// ══════════════════════════════════════
+//  THERMAL PRINT
+// ══════════════════════════════════════
+function thermalPrint(type){
+  const frame=document.getElementById('thermal-content');
+  if(type==='sale'){
+    const sale=db.sales.find(x=>x.id===curSaleId);
+    if(!sale){toast('No sale selected','error');return;}
+    frame.innerHTML=thermalBuildSale(sale);
+  }else if(type==='eod'){
+    frame.innerHTML=thermalBuildEOD(getEODValues());
   }
+  setTimeout(()=>window.print(),120);
+}
+function thermalBuildSale(sale){
+  const s=db.settings;const f=n=>`${s.currency||'£'}${Number(n).toFixed(2)}`;
+  const d=new Date(sale.date);
+  const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yyyy=d.getFullYear();
+  const hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
+  const dateStr=`${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+  const receiptNum=sale.id.replace('REC-','');
+  const catMap={};
+  sale.items.forEach(it=>{
+    const p=db.products.find(x=>x.id===it.id);
+    const cat=it.isCustom?'Custom':(p&&p.category)||'Items';
+    if(!catMap[cat])catMap[cat]=[];
+    catMap[cat].push(it);
+  });
+  const cats=Object.keys(catMap).sort();
+  const multiCat=cats.length>1;
+  let itemsHTML='';
+  cats.forEach(cat=>{
+    if(multiCat)itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
+    catMap[cat].forEach(it=>{
+      itemsHTML+=`<div class="th-item-name">${it.name}${it.isCustom?' ✏':''}</div>`;
+      const desc=it.isWeight?it.weightDisplay:(it.isCustom&&it.weightDisplay?it.weightDisplay:(`${it.qty} × ${f(it.price)}`));
+      itemsHTML+=`<table class="th-table"><tr><td class="col-l">&nbsp;&nbsp;${desc}</td><td class="col-r">${f(it.price*it.qty)}</td></tr></table>`;
+    });
+  });
+  let totalsHTML='';
+  if(sale.discPct>0)totalsHTML+=`<table class="th-total-block"><tr><td class="col-l">Discount ${sale.discPct}%</td><td class="col-r">-${f(sale.discount)}</td></tr></table>`;
+  let changeHTML='';
+  if(sale.payMethod==='cash'){changeHTML=`<div class="th-spacer"></div><table class="th-total-block"><tr><td class="col-l">Cash</td><td class="col-r">${f(sale.total+sale.change)}</td></tr><tr><td class="col-l th-bold">Change</td><td class="col-r th-bold">${f(sale.change)}</td></tr></table>`;}
+  return `
+    <div class="th-store-name">${(s.name||'FLASHPOINT').toUpperCase()}</div>
+    ${s.address?`<div class="th-small">${s.address}</div>`:''}${s.phone?`<div class="th-small">${s.phone}</div>`:''}${s.vat?`<div class="th-small">VAT: ${s.vat}</div>`:''}
+    <div class="th-hr-solid"></div>
+    <table class="th-total-block">
+      <tr><td class="col-l">Receipt #</td><td class="col-r">${receiptNum}</td></tr>
+      <tr><td class="col-l">Date/Time</td><td class="col-r" style="font-size:7pt">${dateStr}</td></tr>
+      <tr><td class="col-l">Payment</td><td class="col-r">${sale.payMethod.toUpperCase()}</td></tr>
+    </table>
+    <div class="th-hr"></div>${itemsHTML}<div class="th-hr"></div>${totalsHTML}
+    <div class="th-hr-solid"></div>
+    <table class="th-grand"><tr><td class="col-l">TOTAL</td><td class="col-r">${f(sale.total)}</td></tr></table>
+    <div class="th-hr-solid"></div>${changeHTML}
+    <div class="th-spacer"></div>
+    <div class="th-center th-bold">${s.footer||'Thank you!'}</div>
+    <div class="th-spacer"></div><div class="th-cut">- - - - - - - - - - - - - -</div>`;
+}
+function thermalBuildEOD(data){
+  const s=db.settings;const f=n=>`${s.currency||'£'}${Number(n).toFixed(2)}`;
+  return `
+    <div class="th-store-name">${(s.name||'FLASHPOINT').toUpperCase()}</div>
+    ${s.address?`<div class="th-small">${s.address}</div>`:''}
+    <div class="th-spacer"></div><div class="th-center th-bold">END OF DAY SUMMARY</div>
+    <div class="th-center">${data.date||'—'}</div>
+    <div class="th-hr-solid"></div>
+    <table class="th-total-block">
+      <tr><td class="col-l th-bold">CASH SALES</td><td class="col-r">${f(data.cash)}</td></tr>
+      <tr><td class="col-l th-bold">CARD SALES</td><td class="col-r">${f(data.card)}</td></tr>
+      <tr><td class="col-l th-bold">EXPENSES</td><td class="col-r">${data.expenses>0?`-${f(data.expenses)}`:f(0)}</td></tr>
+    </table>
+    <div class="th-hr-solid"></div>
+    <table class="th-grand"><tr><td class="col-l">TOTAL</td><td class="col-r">${f(data.net)}</td></tr></table>
+    <div class="th-hr-solid"></div>
+    <table class="th-total-block"><tr><td class="col-l">Till Left</td><td class="col-r">${f(data.till)}</td></tr></table>
+    ${data.notes?`<div class="th-spacer"></div><div class="th-small" style="text-align:left">Notes: ${data.notes}</div>`:''}
+    <div class="th-spacer"></div><div class="th-cut">- - - - - - - - - - - - - -</div>`;
+}
+
+// ══════════════════════════════════════
+//  INVENTORY
+// ══════════════════════════════════════
+function toggleStockLabel(){
+  const u=document.getElementById('iunit').value;
+  const lbl=document.getElementById('istock-label');
+  const box=document.getElementById('weight-info-box');
+  if(u==='each'){lbl.textContent='Stock *';box.style.display='none';}
+  else{lbl.textContent=`Stock (in ${u})`;box.style.display='block';}
+}
+function renderInv(){
+  const q=(document.getElementById('invsearch').value||'').toLowerCase();
+  const body=document.getElementById('inv-body');
+  let ps=db.products;
+  if(q)ps=ps.filter(p=>p.name.toLowerCase().includes(q)||(p.barcode||'').includes(q)||(p.category||'').toLowerCase().includes(q));
+  if(!ps.length){body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text2)">No products</td></tr>`;return;}
+  body.innerHTML=ps.map(p=>{
+    const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';
+    const sl=p.stock<=0?'Out':p.stock<=(p.lowStock||5)?`Low: ${p.stock}`:p.stock;
+    const unitBadge=p.unit&&p.unit!=='each'?`<span style="background:rgba(255,140,0,.15);color:var(--brand);font-size:10px;padding:1px 6px;border-radius:3px;margin-left:4px;font-family:'Courier New',monospace">⚖/${p.unit}</span>`:'';
+    return `<tr data-id="${p.id}">
+      <td><span style="margin-right:6px">${p.emoji||'📦'}</span><strong>${p.name}</strong></td>
+      <td><code style="font-size:10px;color:var(--text2);font-family:'Courier New',monospace">${p.barcode||'—'}</code></td>
+      <td style="color:var(--text2)">${p.category||'—'}</td>
+      <td><strong>${fmt(p.price)}</strong>${unitBadge}</td>
+      <td style="color:var(--text2)">${p.cost?fmt(p.cost):'—'}</td>
+      <td><span class="sp-pill ${sc}">${sl}</span></td>
+      <td><div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="bsm sec" onclick="openItemMo('${p.id}')">✏</button>
+        <button class="bsm grn" onclick="q1('${p.id}')" title="Quick +1">+1</button>
+        <button class="bsm red" onclick="delProd('${p.id}')">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+function q1(id){const p=db.products.find(x=>x.id===id);if(!p)return;p.stock++;saveDB();renderInv();flashRow(id);toast(`${p.emoji} ${p.name}: +1 → ${p.stock}`);}
+function openItemMo(id){
+  if(id){
+    const p=db.products.find(x=>x.id===id);if(!p)return;
+    document.getElementById('item-title').textContent='✏️ Edit Item';
+    document.getElementById('iid').value=p.id;
+    document.getElementById('iname').value=p.name;
+    document.getElementById('iprice').value=p.price;
+    document.getElementById('iunit').value=p.unit||'each';
+    document.getElementById('icost').value=p.cost||'';
+    document.getElementById('istock').value=p.stock;
+    document.getElementById('ilows').value=p.lowStock||'';
+    document.getElementById('icat').value=p.category||'';
+    document.getElementById('ibarcode').value=p.barcode||'';
+    document.getElementById('iemoji').value=p.emoji||'';
+    document.getElementById('idesc').value=p.desc||'';
+  }else{
+    document.getElementById('item-title').textContent='➕ Add Item';
+    document.getElementById('iid').value='';
+    ['iname','iprice','icost','istock','ilows','icat','ibarcode','iemoji','idesc'].forEach(f=>document.getElementById(f).value='');
+    document.getElementById('iunit').value='each';
+  }
+  toggleStockLabel();
+  document.getElementById('mo-item').classList.add('on');
+}
+function saveItem(){
+  const name=document.getElementById('iname').value.trim();
+  const price=parseFloat(document.getElementById('iprice').value);
+  const stock=parseInt(document.getElementById('istock').value)||0;
+  if(!name||isNaN(price)){toast('Name and Price required','error');return;}
+  const id=document.getElementById('iid').value;
+  const data={name,price,unit:document.getElementById('iunit').value||'each',
+    cost:parseFloat(document.getElementById('icost').value)||0,stock,
+    lowStock:parseInt(document.getElementById('ilows').value)||5,
+    category:document.getElementById('icat').value.trim(),
+    barcode:document.getElementById('ibarcode').value.trim(),
+    emoji:document.getElementById('iemoji').value.trim()||'📦',
+    desc:document.getElementById('idesc').value.trim()};
+  if(id){const i=db.products.findIndex(x=>x.id===id);if(i>-1)db.products[i]={...db.products[i],...data};toast('Updated');}
+  else{db.products.push({id:uid(),...data});toast('Product added');}
+  saveDB();closeMo('mo-item');renderInv();renderCats();renderProds();
+}
+function delProd(id){
+  if(!confirm('Delete this product?'))return;
+  db.products=db.products.filter(x=>x.id!==id);
+  saveDB();renderInv();renderProds();renderCats();toast('Deleted','warning');
 }
 
 // ══════════════════════════════════════
@@ -1046,102 +1567,50 @@ async function openScanner(mode){
     if('BarcodeDetector' in window){
       detector=new BarcodeDetector({formats:['ean_13','ean_8','code_128','code_39','code_93','qr_code','upc_a','upc_e','itf']});
       startLoop();
-    }else{
-      document.getElementById('sres').innerHTML='<span style="color:var(--warning)">⚠ Camera scan needs Chrome/Edge. Type manually:</span>';
-      showManual();
-    }
-  }catch(err){
-    document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">📵 Camera: ${err.message}</span>`;
-    showManual();
-  }
+    }else{document.getElementById('sres').innerHTML='<span style="color:var(--warning)">⚠ Camera scan needs Chrome/Edge. Type manually:</span>';showManual();}
+  }catch(err){document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">📵 Camera: ${err.message}</span>`;showManual();}
 }
 function startLoop(){
-  clearInterval(scanLoop);
-  const video=document.getElementById('sv');let last='',lastT=0;
+  clearInterval(scanLoop);const video=document.getElementById('sv');let last='',lastT=0;
   scanLoop=setInterval(async()=>{
     if(!stream||!detector)return;
-    try{
-      const codes=await detector.detect(video);
-      if(codes.length){
-        const code=codes[0].rawValue,now=Date.now();
-        if(code===last&&now-lastT<1500)return;
-        last=code;lastT=now;
-        document.getElementById('sres').textContent=`✅ ${code}`;
-        handleScan(code);
-      }
-    }catch(e){}
+    try{const codes=await detector.detect(video);if(codes.length){const code=codes[0].rawValue,now=Date.now();if(code===last&&now-lastT<1500)return;last=code;lastT=now;document.getElementById('sres').textContent=`✅ ${code}`;handleScan(code);}}catch(e){}
   },200);
 }
 function showManual(){document.getElementById('manwrap').style.display='block';setTimeout(()=>document.getElementById('manbc').focus(),80);}
 function closeScanner(){
-  document.getElementById('mo-scan').classList.remove('on');
-  clearInterval(scanLoop);scanLoop=null;
+  document.getElementById('mo-scan').classList.remove('on');clearInterval(scanLoop);scanLoop=null;
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-  torchOn=false;detector=null;
-  document.getElementById('torch-btn').classList.remove('on');
+  torchOn=false;detector=null;document.getElementById('torch-btn').classList.remove('on');
 }
 async function toggleTorch(){
-  if(!stream){toast('No camera active','warning');return;}
+  if(!stream){toast('No camera','warning');return;}
   const track=stream.getVideoTracks()[0];if(!track)return;
-  try{
-    torchOn=!torchOn;
-    await track.applyConstraints({advanced:[{torch:torchOn}]});
-    document.getElementById('torch-btn').classList.toggle('on',torchOn);
-    toast(torchOn?'🔦 Flashlight ON':'Flashlight OFF',torchOn?'success':'warning');
-  }catch(e){
-    toast('Torch not available','warning');
-    torchOn=false;document.getElementById('torch-btn').classList.remove('on');
-  }
+  try{torchOn=!torchOn;await track.applyConstraints({advanced:[{torch:torchOn}]});document.getElementById('torch-btn').classList.toggle('on',torchOn);toast(torchOn?'🔦 ON':'🔦 OFF',torchOn?'success':'warning');}
+  catch(e){toast('Torch not available','warning');torchOn=false;document.getElementById('torch-btn').classList.remove('on');}
 }
 function handleScan(code){
   if(!code)return;code=code.trim();
   if(scanMode==='checkout'){
     const p=db.products.find(x=>x.barcode===code);
-    if(p){addToBasket(p.id);closeScanner();}
-    else{toast(`Barcode not found`,'warning');document.getElementById('psearch').value=code;renderProds();closeScanner();}
-    return;
+    if(p){if(isWeightProduct(p)){closeScanner();openWeightModal(p.id);}else{addToBasket(p.id);closeScanner();}}
+    else{toast(`Barcode not found`,'warning');document.getElementById('psearch').value=code;renderProds();closeScanner();}return;
   }
-  if(scanMode==='assign-barcode'){
-    document.getElementById('ibarcode').value=code;
-    toast(`✅ Barcode captured: ${code}`);closeScanner();return;
-  }
+  if(scanMode==='assign-barcode'){document.getElementById('ibarcode').value=code;toast(`✅ Barcode: ${code}`);closeScanner();return;}
   if(scanMode==='inv-find'){
     const p=db.products.find(x=>x.barcode===code);
     if(p){
-      foundId=p.id;
-      const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';
-      const sl=p.stock<=0?'Out of Stock':p.stock<=(p.lowStock||5)?`Low: ${p.stock}`:`${p.stock} in stock`;
-      document.getElementById('found-info').innerHTML=`
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:36px">${p.emoji||'📦'}</span>
-          <div>
-            <div style="font-size:16px;font-weight:800">${p.name}</div>
-            <div style="font-size:10px;color:var(--text2);font-family:monospace;margin:3px 0">${code}</div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span class="sp-pill ${sc}">${sl}</span>
-              <strong style="color:var(--accent)">${fmt(p.price)}</strong>
-            </div>
-          </div>
-        </div>`;
+      foundId=p.id;const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';const sl=p.stock<=0?'Out':p.stock<=(p.lowStock||5)?`Low: ${p.stock}`:`${p.stock}`;
+      document.getElementById('found-info').innerHTML=`<div style="display:flex;align-items:center;gap:12px"><span style="font-size:36px">${p.emoji||'📦'}</span><div><div style="font-size:16px;font-weight:800">${p.name}</div><div style="font-size:10px;color:var(--text2);font-family:monospace;margin:3px 0">${code}</div><div style="display:flex;gap:8px;align-items:center"><span class="sp-pill ${sc}">${sl}</span><strong style="color:var(--accent)">${fmt(p.price)}${p.unit&&p.unit!=='each'?'/'+p.unit:''}</strong></div></div></div>`;
       closeScanner();document.getElementById('mo-found').classList.add('on');
-    }else{
-      document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">❌ Not found: ${code}</span>`;
-      toast(`Not in inventory`,'error');
-    }
-    return;
+    }else{document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">❌ Not found: ${code}</span>`;toast(`Not in inventory`,'error');}return;
   }
   if(scanMode==='inv-stock'){
     const p=db.products.find(x=>x.barcode===code);
-    if(p){
-      if(siProdId&&siProdId!==p.id&&siDelta>0)siSave(true);
-      siProdId=p.id;if(siDelta===0)siDelta=1;
-      document.getElementById('sipl').innerHTML=`<strong>${p.emoji||'📦'} ${p.name}</strong> <span style="color:var(--text2);font-size:11px">Now: ${p.stock}</span>`;
-      document.getElementById('sipq').textContent=`+${siDelta}`;
-      clearInterval(scanLoop);setTimeout(()=>{if(stream&&detector)startLoop();},1800);
-    }else{
-      document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">❌ Not found: ${code}</span>`;
-    }
-    return;
+    if(p){if(siProdId&&siProdId!==p.id&&siDelta>0)siSave(true);siProdId=p.id;if(siDelta===0)siDelta=1;
+    document.getElementById('sipl').innerHTML=`<strong>${p.emoji||'📦'} ${p.name}</strong> <span style="color:var(--text2);font-size:11px">Now: ${p.stock}</span>`;
+    document.getElementById('sipq').textContent=`+${siDelta}`;clearInterval(scanLoop);setTimeout(()=>{if(stream&&detector)startLoop();},1800);}
+    else document.getElementById('sres').innerHTML=`<span style="color:var(--danger)">❌ Not found: ${code}</span>`;return;
   }
 }
 function siAdj(n){if(!siProdId){toast('Scan a product first','warning');return;}siDelta=Math.max(0,siDelta+n);document.getElementById('sipq').textContent=`+${siDelta}`;}
@@ -1150,448 +1619,35 @@ function siSave(silent){
   if(!siProdId){if(!silent)toast('No product scanned','warning');return;}
   if(siDelta===0){if(!silent)toast('Delta is 0','warning');return;}
   const p=db.products.find(x=>x.id===siProdId);
-  if(p){
-    const was=p.stock;p.stock+=siDelta;saveDB();
-    if(!silent)toast(`${p.emoji} ${p.name}: ${was}→${p.stock} (+${siDelta})`);
-    renderInv();flashRow(p.id);
-    siDelta=0;siProdId=null;
-    document.getElementById('sipq').textContent='+0';
-    document.getElementById('sipl').textContent='Scan a product…';
-    if(!silent)closeScanner();
-  }
+  if(p){const was=p.stock;p.stock+=siDelta;saveDB();if(!silent)toast(`${p.emoji} ${p.name}: ${was}→${p.stock}`);renderInv();flashRow(p.id);siDelta=0;siProdId=null;document.getElementById('sipq').textContent='+0';document.getElementById('sipl').textContent='Scan a product…';if(!silent)closeScanner();}
 }
 function editFound(){closeMo('mo-found');if(foundId)openItemMo(foundId);}
-function flashRow(id){
-  setTimeout(()=>{
-    const r=document.querySelector(`#inv-body tr[data-id="${id}"]`);
-    if(r){r.classList.add('flash');setTimeout(()=>r.classList.remove('flash'),950);}
-  },80);
-}
-
-// ══════════════════════════════════════
-//  CHECKOUT — NO TAX
-// ══════════════════════════════════════
-function getCats(){return['All',...[...new Set(db.products.map(p=>p.category).filter(Boolean))].sort()];}
-function renderCats(){
-  document.getElementById('cats').innerHTML=getCats().map(c=>
-    `<button class="cb ${c===activeCat?'on':''}" onclick="setCat('${c}')">${c}</button>`).join('');
-}
-function setCat(c){activeCat=c;renderCats();renderProds();}
-function renderProds(){
-  const q=document.getElementById('psearch').value.toLowerCase();
-  const g=document.getElementById('pgrid');
-  let ps=db.products;
-  if(activeCat!=='All')ps=ps.filter(p=>p.category===activeCat);
-  if(q)ps=ps.filter(p=>p.name.toLowerCase().includes(q)||(p.barcode||'').includes(q)||(p.category||'').toLowerCase().includes(q));
-  if(!ps.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><p>No products</p></div>`;return;}
-  g.innerHTML=ps.map(p=>{
-    const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';
-    const sl=p.stock<=0?'Out of Stock':p.stock<=(p.lowStock||5)?`Low: ${p.stock}`:`${p.stock} in stock`;
-    const cc=p.stock<=0?'out-s':p.stock<=(p.lowStock||5)?'low-s':'';
-    return `<div class="pc ${cc}" onclick="addToBasket('${p.id}')">
-      <div class="pe">${p.emoji||'📦'}</div>
-      <div class="pn">${p.name}</div>
-      <div class="pbc">${p.barcode||p.id}</div>
-      <div class="pp">${fmt(p.price)}</div>
-      <span class="ps ${sc}">${sl}</span>
-    </div>`;
-  }).join('');
-}
-function addToBasket(id){
-  const p=db.products.find(x=>x.id===id);
-  if(!p||p.stock<=0){toast('Out of stock!','warning');return;}
-  const ex=basket.find(b=>b.id===id);
-  if(ex){if(ex.qty>=p.stock){toast('No more stock!','warning');return;}ex.qty++;}
-  else basket.push({id:p.id,name:p.name,price:p.price,qty:1,emoji:p.emoji||'📦'});
-  renderBasket();toast(`${p.emoji||'📦'} ${p.name} added`);
-}
-function removeItem(id){basket=basket.filter(b=>b.id!==id);renderBasket();}
-function chgQty(id,d){
-  const it=basket.find(b=>b.id===id);if(!it)return;
-  const p=db.products.find(x=>x.id===id);
-  it.qty=Math.max(1,Math.min(it.qty+d,p?p.stock:999));
-  renderBasket();
-}
-function clearBasket(){if(!basket.length)return;basket=[];document.getElementById('disc').value='';renderBasket();toast('Basket cleared','warning');}
-function clearDisc(){document.getElementById('disc').value='';renderBasket();}
-
-// NO TAX — total = subtotal - discount only
-function getTotals(){
-  const sub=basket.reduce((s,b)=>s+b.price*b.qty,0);
-  const dp=parseFloat(document.getElementById('disc').value)||0;
-  const disc=sub*(dp/100);
-  const total=sub-disc;
-  return{sub,disc,dp,total};
-}
-
-function renderBasket(){
-  const el=document.getElementById('bitems');
-  document.getElementById('bcnt').textContent=basket.reduce((s,b)=>s+b.qty,0);
-  if(!basket.length){
-    el.innerHTML=`<div class="empty"><div class="ei">🛒</div><p>Empty basket</p><span>Tap a product or scan</span></div>`;
-  }else{
-    el.innerHTML=basket.map(it=>`
-      <div class="bi">
-        <span style="font-size:18px">${it.emoji}</span>
-        <div class="bii"><div class="bin">${it.name}</div><div class="bip">${fmt(it.price)} each</div></div>
-        <div class="qc">
-          <button class="qb" onclick="chgQty('${it.id}',-1)">−</button>
-          <span class="qn">${it.qty}</span>
-          <button class="qb" onclick="chgQty('${it.id}',1)">+</button>
-        </div>
-        <div class="bit">${fmt(it.price*it.qty)}</div>
-        <button class="xb" onclick="removeItem('${it.id}')">✕</button>
-      </div>`).join('');
-  }
-  const{sub,disc,dp,total}=getTotals();
-  document.getElementById('ts').textContent=fmt(sub);
-  document.getElementById('ttot').textContent=fmt(total);
-  const dr=document.getElementById('tdr');
-  if(dp>0){dr.style.display='flex';document.getElementById('td2').textContent=`-${fmt(disc)}`;}
-  else dr.style.display='none';
-}
-
-// ══════════════════════════════════════
-//  PAYMENT
-// ══════════════════════════════════════
-function openPay(){
-  if(!basket.length){toast('Basket is empty','warning');return;}
-  const{total}=getTotals();
-  document.getElementById('pay-amt').textContent=fmt(total);
-  document.getElementById('cashamt').value='';
-  document.getElementById('chg-sec').style.display='none';
-  document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
-  document.querySelectorAll('.pm')[0].classList.add('on');
-  payMethod='cash';document.getElementById('cash-sec').style.display='block';
-  document.getElementById('mo-pay').classList.add('on');
-}
-function selPay(m,el){
-  payMethod=m;
-  document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('cash-sec').style.display=m==='cash'?'block':'none';
-  document.getElementById('chg-sec').style.display='none';
-}
-function np2(v){
-  const inp=document.getElementById('cashamt');
-  const{total}=getTotals();
-  if(v==='exact')inp.value=total.toFixed(2);
-  else if(v==='del')inp.value=inp.value.slice(0,-1);
-  else inp.value=v;
-  calcChg();
-}
-function calcChg(){
-  const{total}=getTotals();
-  const t=parseFloat(document.getElementById('cashamt').value)||0;
-  const cs=document.getElementById('chg-sec');
-  if(t>0){
-    cs.style.display='block';
-    const chg=t-total;
-    document.getElementById('chgamt').textContent=fmt(Math.max(0,chg));
-    document.getElementById('chgamt').style.color=chg<0?'var(--danger)':'var(--accent)';
-  }else cs.style.display='none';
-}
-function completeSale(){
-  const{sub,disc,dp,total}=getTotals();
-  if(payMethod==='cash'){
-    const t=parseFloat(document.getElementById('cashamt').value)||0;
-    if(t<total){toast('Cash less than total','error');return;}
-  }
-  const id='REC-'+String(Date.now()).slice(-8);
-  const sale={
-    id,date:new Date().toISOString(),
-    items:basket.map(b=>({...b})),
-    subtotal:sub,discount:disc,discPct:dp,
-    tax:0,  // always 0 — no tax
-    total,payMethod,
-    change:payMethod==='cash'?(parseFloat(document.getElementById('cashamt').value)||0)-total:0
-  };
-  basket.forEach(b=>{const p=db.products.find(x=>x.id===b.id);if(p)p.stock=Math.max(0,p.stock-b.qty);});
-  db.sales.unshift(sale);saveDB();
-  closeMo('mo-pay');curSaleId=id;
-  basket=[];document.getElementById('disc').value='';
-  renderBasket();renderProds();
-  toast(`Sale complete! ${fmt(total)}`);
-  showReceipt(sale);
-}
-
-// ══════════════════════════════════════
-//  RECEIPT (no tax)
-// ══════════════════════════════════════
-function showReceipt(sale){
-  const s=db.settings;
-  const receiptNum=sale.id.replace('REC-','');
-  const d=new Date(sale.date);
-  const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yyyy=d.getFullYear();
-  const hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
-  const lines=sale.items.map(it=>`
-    <div class="rr"><span style="font-weight:700">${it.emoji} ${it.name}</span></div>
-    <div class="rr"><span style="padding-left:10px;color:#555">${it.qty} × ${fmt(it.price)}</span><span>${fmt(it.price*it.qty)}</span></div>
-  `).join('');
-  document.getElementById('rec-c').innerHTML=`
-    <div class="rh">
-      <h2>${s.name||'FLASHPOINT'}</h2>
-      ${s.address?`<p>${s.address}</p>`:''}
-      ${s.phone?`<p>${s.phone}</p>`:''}
-      ${s.vat?`<p>VAT: ${s.vat}</p>`:''}
-    </div>
-    <hr class="rdiv">
-    <div class="rr"><span>Receipt #</span><span>${receiptNum}</span></div>
-    <div class="rr"><span>Date</span><span>${dd}/${mm}/${yyyy}</span></div>
-    <div class="rr"><span>Time</span><span>${hh}:${mi}</span></div>
-    <div class="rr"><span>Payment</span><span>${sale.payMethod.toUpperCase()}</span></div>
-    <hr class="rdiv">
-    ${lines}
-    <hr class="rdiv">
-    ${sale.discPct>0?`<div class="rr"><span>Discount ${sale.discPct}%</span><span>-${fmt(sale.discount)}</span></div>`:''}
-    <hr class="rdiv">
-    <div class="rr rt"><span>TOTAL</span><span>${fmt(sale.total)}</span></div>
-    ${sale.payMethod==='cash'?`<div class="rr"><span>Cash</span><span>${fmt(sale.total+sale.change)}</span></div><div class="rr rt"><span>Change</span><span>${fmt(sale.change)}</span></div>`:''}
-    <hr class="rdiv">
-    <p style="text-align:center;margin-top:6px">${s.footer||'Thank you!'}</p>`;
-  document.getElementById('mo-rec').classList.add('on');
-}
-function dlPDF(){
-  const sale=db.sales.find(x=>x.id===curSaleId);
-  if(!sale){toast('Sale not found','error');return;}
-  PDF.dl(PDF.receipt(sale,db.settings),`receipt-${sale.id}.pdf`);
-  toast('PDF downloaded!');
-}
-
-// ══════════════════════════════════════
-//  THERMAL PRINT
-// ══════════════════════════════════════
-function thermalPrint(type){
-  const frame=document.getElementById('thermal-content');
-  if(type==='sale'){
-    const sale=db.sales.find(x=>x.id===curSaleId);
-    if(!sale){toast('No sale selected','error');return;}
-    frame.innerHTML=thermalBuildSale(sale);
-  }else if(type==='eod'){
-    frame.innerHTML=thermalBuildEOD(getEODValues());
-  }
-  setTimeout(()=>window.print(),120);
-}
-
-function thermalBuildSale(sale){
-  const s=db.settings;
-  const f=n=>`${s.currency||'£'}${Number(n).toFixed(2)}`;
-  const d=new Date(sale.date);
-  const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0'),yyyy=d.getFullYear();
-  const hh=String(d.getHours()).padStart(2,'0'),mi=String(d.getMinutes()).padStart(2,'0');
-  const dateStr=`${dd}/${mm}/${yyyy} ${hh}:${mi}`;
-  const receiptNum=sale.id.replace('REC-','');
-
-  // Group by category
-  const catMap={};
-  sale.items.forEach(it=>{
-    const p=db.products.find(x=>x.id===it.id);
-    const cat=(p&&p.category)||'Items';
-    if(!catMap[cat])catMap[cat]=[];
-    catMap[cat].push(it);
-  });
-  const cats=Object.keys(catMap).sort();
-  const multiCat=cats.length>1;
-
-  let itemsHTML='';
-  cats.forEach(cat=>{
-    if(multiCat)itemsHTML+=`<div class="th-cat-header">${cat}</div>`;
-    catMap[cat].forEach(it=>{
-      itemsHTML+=`<div class="th-item-name">${it.name}</div>`;
-      itemsHTML+=`<table class="th-table"><tr><td class="col-l">&nbsp;&nbsp;${it.qty} &times; ${f(it.price)}</td><td class="col-r">${f(it.price*it.qty)}</td></tr></table>`;
-    });
-  });
-
-  let totalsHTML=`<table class="th-total-block">`;
-  if(sale.discPct>0)totalsHTML+=`<tr><td class="col-l">Discount ${sale.discPct}%</td><td class="col-r">-${f(sale.discount)}</td></tr>`;
-  totalsHTML+=`</table>`;
-
-  let changeHTML='';
-  if(sale.payMethod==='cash'){
-    changeHTML=`<div class="th-spacer"></div><table class="th-total-block">
-      <tr><td class="col-l">Cash</td><td class="col-r">${f(sale.total+sale.change)}</td></tr>
-      <tr><td class="col-l th-bold">Change</td><td class="col-r th-bold">${f(sale.change)}</td></tr>
-    </table>`;
-  }
-
-  return `
-    <div class="th-store-name">${(s.name||'FLASHPOINT').toUpperCase()}</div>
-    ${s.address?`<div class="th-small">${s.address}</div>`:''}
-    ${s.phone?`<div class="th-small">${s.phone}</div>`:''}
-    ${s.vat?`<div class="th-small">VAT: ${s.vat}</div>`:''}
-    <div class="th-hr-solid"></div>
-    <table class="th-total-block">
-      <tr><td class="col-l">Receipt #</td><td class="col-r">${receiptNum}</td></tr>
-      <tr><td class="col-l">Date/Time</td><td class="col-r" style="font-size:7pt">${dateStr}</td></tr>
-      <tr><td class="col-l">Payment</td><td class="col-r">${sale.payMethod.toUpperCase()}</td></tr>
-    </table>
-    <div class="th-hr"></div>
-    ${itemsHTML}
-    <div class="th-hr"></div>
-    ${totalsHTML}
-    <div class="th-hr-solid"></div>
-    <table class="th-grand">
-      <tr><td class="col-l">TOTAL</td><td class="col-r">${f(sale.total)}</td></tr>
-    </table>
-    <div class="th-hr-solid"></div>
-    ${changeHTML}
-    <div class="th-spacer"></div>
-    <div class="th-center th-bold">${s.footer||'Thank you!'}</div>
-    <div class="th-spacer"></div>
-    <div class="th-cut">- - - - - - - - - - - - - -</div>
-  `;
-}
-
-function thermalBuildEOD(data){
-  const s=db.settings;
-  const f=n=>`${s.currency||'£'}${Number(n).toFixed(2)}`;
-  return `
-    <div class="th-store-name">${(s.name||'FLASHPOINT').toUpperCase()}</div>
-    ${s.address?`<div class="th-small">${s.address}</div>`:''}
-    <div class="th-spacer"></div>
-    <div class="th-center th-bold">END OF DAY SUMMARY</div>
-    <div class="th-center">${data.date||'—'}</div>
-    <div class="th-hr-solid"></div>
-    <table class="th-total-block">
-      <tr><td class="col-l th-bold">CASH SALES</td><td class="col-r">${f(data.cash)}</td></tr>
-      <tr><td class="col-l th-bold">CARD SALES</td><td class="col-r">${f(data.card)}</td></tr>
-      <tr><td class="col-l th-bold">EXPENSES</td><td class="col-r">${data.expenses>0?`-${f(data.expenses)}`:f(0)}</td></tr>
-    </table>
-    <div class="th-hr-solid"></div>
-    <table class="th-grand">
-      <tr><td class="col-l">TOTAL</td><td class="col-r">${f(data.net)}</td></tr>
-    </table>
-    <div class="th-hr-solid"></div>
-    <table class="th-total-block">
-      <tr><td class="col-l">Till Left</td><td class="col-r">${f(data.till)}</td></tr>
-    </table>
-    ${data.notes?`<div class="th-spacer"></div><div class="th-small" style="text-align:left">Notes: ${data.notes}</div>`:''}
-    <div class="th-spacer"></div>
-    <div class="th-cut">- - - - - - - - - - - - - -</div>
-  `;
-}
-
-// ══════════════════════════════════════
-//  INVENTORY
-// ══════════════════════════════════════
-function renderInv(){
-  const q=(document.getElementById('invsearch').value||'').toLowerCase();
-  const body=document.getElementById('inv-body');
-  let ps=db.products;
-  if(q)ps=ps.filter(p=>p.name.toLowerCase().includes(q)||(p.barcode||'').includes(q)||(p.category||'').toLowerCase().includes(q));
-  if(!ps.length){body.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text2)">No products</td></tr>`;return;}
-  body.innerHTML=ps.map(p=>{
-    const sc=p.stock<=0?'stk-out':p.stock<=(p.lowStock||5)?'stk-low':'stk-ok';
-    const sl=p.stock<=0?'Out':p.stock<=(p.lowStock||5)?`Low: ${p.stock}`:p.stock;
-    return `<tr data-id="${p.id}">
-      <td><span style="margin-right:6px">${p.emoji||'📦'}</span><strong>${p.name}</strong></td>
-      <td><code style="font-size:10px;color:var(--text2);font-family:'Courier New',monospace">${p.barcode||'—'}</code></td>
-      <td style="color:var(--text2)">${p.category||'—'}</td>
-      <td><strong>${fmt(p.price)}</strong></td>
-      <td style="color:var(--text2)">${p.cost?fmt(p.cost):'—'}</td>
-      <td><span class="sp-pill ${sc}">${sl}</span></td>
-      <td>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          <button class="bsm sec" onclick="openItemMo('${p.id}')">✏</button>
-          <button class="bsm grn" onclick="q1('${p.id}')" title="Quick +1">+1</button>
-          <button class="bsm red" onclick="delProd('${p.id}')">🗑</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
-}
-function q1(id){
-  const p=db.products.find(x=>x.id===id);if(!p)return;
-  p.stock++;saveDB();renderInv();flashRow(id);
-  toast(`${p.emoji} ${p.name}: +1 → ${p.stock}`);
-}
-function openItemMo(id){
-  if(id){
-    const p=db.products.find(x=>x.id===id);if(!p)return;
-    document.getElementById('item-title').textContent='✏️ Edit Item';
-    document.getElementById('iid').value=p.id;
-    document.getElementById('iname').value=p.name;
-    document.getElementById('iprice').value=p.price;
-    document.getElementById('icost').value=p.cost||'';
-    document.getElementById('istock').value=p.stock;
-    document.getElementById('ilows').value=p.lowStock||'';
-    document.getElementById('icat').value=p.category||'';
-    document.getElementById('ibarcode').value=p.barcode||'';
-    document.getElementById('iemoji').value=p.emoji||'';
-    document.getElementById('idesc').value=p.desc||'';
-  }else{
-    document.getElementById('item-title').textContent='➕ Add Item';
-    document.getElementById('iid').value='';
-    ['iname','iprice','icost','istock','ilows','icat','ibarcode','iemoji','idesc'].forEach(f=>document.getElementById(f).value='');
-  }
-  document.getElementById('mo-item').classList.add('on');
-}
-function saveItem(){
-  const name=document.getElementById('iname').value.trim();
-  const price=parseFloat(document.getElementById('iprice').value);
-  const stock=parseInt(document.getElementById('istock').value);
-  if(!name||isNaN(price)||isNaN(stock)){toast('Name, Price and Stock required','error');return;}
-  const id=document.getElementById('iid').value;
-  const data={
-    name,price,
-    cost:parseFloat(document.getElementById('icost').value)||0,
-    stock,
-    lowStock:parseInt(document.getElementById('ilows').value)||5,
-    category:document.getElementById('icat').value.trim(),
-    barcode:document.getElementById('ibarcode').value.trim(),
-    emoji:document.getElementById('iemoji').value.trim()||'📦',
-    desc:document.getElementById('idesc').value.trim()
-  };
-  if(id){
-    const i=db.products.findIndex(x=>x.id===id);
-    if(i>-1)db.products[i]={...db.products[i],...data};
-    toast('Product updated');
-  }else{
-    db.products.push({id:uid(),...data});
-    toast('Product added');
-  }
-  saveDB();closeMo('mo-item');renderInv();renderCats();renderProds();
-}
-function delProd(id){
-  if(!confirm('Delete this product?'))return;
-  db.products=db.products.filter(x=>x.id!==id);
-  saveDB();renderInv();renderProds();renderCats();toast('Deleted','warning');
-}
+function flashRow(id){setTimeout(()=>{const r=document.querySelector(`#inv-body tr[data-id="${id}"]`);if(r){r.classList.add('flash');setTimeout(()=>r.classList.remove('flash'),950);}},80);}
 
 // ══════════════════════════════════════
 //  HISTORY
 // ══════════════════════════════════════
 function renderHist(){
   const q=(document.getElementById('hsearch').value||'').toLowerCase();
-  const f=document.getElementById('hf').value;
-  const now=new Date();
-  let sales=db.sales.filter(s=>{
-    const d=new Date(s.date);
-    if(f==='today')return d.toDateString()===now.toDateString();
-    if(f==='week'){const w=new Date(now);w.setDate(now.getDate()-7);return d>=w;}
-    if(f==='month')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
-    return true;
-  });
+  const f=document.getElementById('hf').value;const now=new Date();
+  let sales=db.sales.filter(s=>{const d=new Date(s.date);if(f==='today')return d.toDateString()===now.toDateString();if(f==='week'){const w=new Date(now);w.setDate(now.getDate()-7);return d>=w;}if(f==='month')return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();return true;});
   if(q)sales=sales.filter(s=>s.id.toLowerCase().includes(q)||String(s.total).includes(q));
   const el=document.getElementById('hlist');
   if(!sales.length){el.innerHTML=`<div class="empty"><div class="ei">📋</div><p>No sales found</p></div>`;return;}
-  el.innerHTML=sales.map(s=>`
-    <div class="sc" onclick="viewSale('${s.id}')">
-      <div style="font-size:10px;color:var(--text2);font-family:'Courier New',monospace">${s.id}</div>
-      <div><h3>${s.items.map(i=>i.emoji||'📦').join('')} ${s.items.length} item${s.items.length!==1?'s':''}</h3>
-      <p>${new Date(s.date).toLocaleString('en-GB')}</p></div>
-      <div class="sa">${fmt(s.total)}</div>
-      <div class="pb">${s.payMethod.toUpperCase()}</div>
-    </div>`).join('');
+  el.innerHTML=sales.map(s=>`<div class="sc" onclick="viewSale('${s.id}')">
+    <div style="font-size:10px;color:var(--text2);font-family:'Courier New',monospace">${s.id}</div>
+    <div><h3>${s.items.map(i=>i.emoji||'📦').join('')} ${s.items.length} item${s.items.length!==1?'s':''}</h3><p>${new Date(s.date).toLocaleString('en-GB')}</p></div>
+    <div class="sa">${fmt(s.total)}</div>
+    <div class="pb">${s.payMethod.toUpperCase()}</div>
+  </div>`).join('');
 }
 function viewSale(id){
-  const s=db.sales.find(x=>x.id===id);if(!s)return;
-  curSaleId=id;
+  const s=db.sales.find(x=>x.id===id);if(!s)return;curSaleId=id;
   document.getElementById('sale-det').innerHTML=`
     <div style="font-family:'Courier New',monospace;font-size:12px">
       <div style="margin-bottom:8px"><strong>${s.id}</strong> — ${new Date(s.date).toLocaleString('en-GB')}</div>
       <table style="width:100%;border-collapse:collapse">
-        ${s.items.map(i=>`<tr><td>${i.emoji} ${i.name}</td><td style="text-align:center">×${i.qty}</td><td style="text-align:right">${fmt(i.price*i.qty)}</td></tr>`).join('')}
+        ${s.items.map(i=>`<tr><td>${i.emoji} ${i.name}${i.isCustom?' ✏':''}</td><td style="text-align:center">${i.isWeight?i.weightDisplay:`×${i.qty}`}</td><td style="text-align:right">${fmt(i.price*i.qty)}</td></tr>`).join('')}
       </table>
       <hr style="border-color:var(--border);margin:8px 0">
       ${s.discPct>0?`<div style="display:flex;justify-content:space-between;color:var(--warning)"><span>Discount ${s.discPct}%</span><span>-${fmt(s.discount)}</span></div>`:''}
@@ -1602,20 +1658,16 @@ function viewSale(id){
 }
 
 // ══════════════════════════════════════
-//  REPORTS (no tax)
+//  REPORTS
 // ══════════════════════════════════════
 function renderRep(){
-  const now=new Date();
-  const today=db.sales.filter(s=>new Date(s.date).toDateString()===now.toDateString());
-  const all=db.sales;
-  const tRev=today.reduce((s,x)=>s+x.total,0);
-  const aRev=all.reduce((s,x)=>s+x.total,0);
-  const avg=all.length?aRev/all.length:0;
+  const now=new Date();const today=db.sales.filter(s=>new Date(s.date).toDateString()===now.toDateString());const all=db.sales;
+  const tRev=today.reduce((s,x)=>s+x.total,0);const aRev=all.reduce((s,x)=>s+x.total,0);const avg=all.length?aRev/all.length:0;
   const im={};all.forEach(s=>s.items.forEach(i=>{im[i.name]=(im[i.name]||0)+i.qty;}));
   const top=Object.entries(im).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const pm={};all.forEach(s=>pm[s.payMethod]=(pm[s.payMethod]||0)+1);
-  const low=db.products.filter(p=>p.stock<=(p.lowStock||5)&&p.stock>0);
-  const out=db.products.filter(p=>p.stock<=0);
+  const low=db.products.filter(p=>!isWeightProduct(p)&&p.stock<=(p.lowStock||5)&&p.stock>0);
+  const out=db.products.filter(p=>!isWeightProduct(p)&&p.stock<=0);
   document.getElementById('rep-c').innerHTML=`
     <div class="sg">
       <div class="scard"><div class="lbl">Today Revenue</div><div class="val">${fmt(tRev)}</div><div class="sub">${today.length} sales</div></div>
@@ -1631,64 +1683,40 @@ function renderRep(){
     ${today.length?`<div class="ss"><h3>📅 Today</h3>${today.map(s=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text2);font-family:'Courier New',monospace">${s.id}</span><span>${new Date(s.date).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span><span style="color:var(--text2)">${s.payMethod.toUpperCase()}</span><strong style="color:var(--accent)">${fmt(s.total)}</strong></div>`).join('')}<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:15px"><strong>Day Total</strong><strong style="color:var(--accent)">${fmt(tRev)}</strong></div></div>`:''}`;
 }
 function exportReport(){
-  const now=new Date();
-  const todaySales=db.sales.filter(x=>new Date(x.date).toDateString()===now.toDateString());
-  const rev=todaySales.reduce((s,x)=>s+x.total,0);
+  const now=new Date();const todaySales=db.sales.filter(x=>new Date(x.date).toDateString()===now.toDateString());const rev=todaySales.reduce((s,x)=>s+x.total,0);
   let txt=`${db.settings.name||'FLASHPOINT'} - REPORT\n${now.toLocaleDateString('en-GB')}\n\nTransactions: ${todaySales.length}\nRevenue: ${fmt(rev)}\n\n`;
   todaySales.forEach(s=>{txt+=`${s.id}  ${new Date(s.date).toLocaleTimeString('en-GB')}  ${s.payMethod.toUpperCase()}  ${fmt(s.total)}\n`;});
-  const blob=new Blob([txt],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`report-${now.toISOString().slice(0,10)}.txt`;a.click();
-  toast('Report exported!');
+  const blob=new Blob([txt],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`report-${now.toISOString().slice(0,10)}.txt`;a.click();toast('Report exported!');
 }
 
 // ══════════════════════════════════════
 //  EOD
 // ══════════════════════════════════════
 function initEOD(){
-  const dateEl=document.getElementById('eod-date');
-  if(!dateEl.value)dateEl.value=new Date().toISOString().slice(0,10);
-  const sym=C();
-  document.getElementById('eod-sym1').textContent=sym;
-  document.getElementById('eod-sym2').textContent=sym;
-  document.getElementById('eod-sym3').textContent=sym;
-  document.getElementById('eod-sym4').textContent=sym;
-  recalcEOD();
+  const dateEl=document.getElementById('eod-date');if(!dateEl.value)dateEl.value=new Date().toISOString().slice(0,10);
+  const sym=C();['eod-sym1','eod-sym2','eod-sym3','eod-sym4'].forEach(id=>document.getElementById(id).textContent=sym);recalcEOD();
 }
-function fmtDateDMY(raw){
-  if(!raw)return'—';
-  const p=raw.split('-');
-  return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:raw;
-}
+function fmtDateDMY(raw){if(!raw)return'—';const p=raw.split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:raw;}
 function getEODValues(){
-  const cash=parseFloat(document.getElementById('eod-cash').value)||0;
-  const card=parseFloat(document.getElementById('eod-card').value)||0;
-  const expenses=parseFloat(document.getElementById('eod-exp').value)||0;
-  const till=parseFloat(document.getElementById('eod-till').value)||0;
-  const net=cash+card-expenses;
-  const dateRaw=document.getElementById('eod-date').value;
-  const date=fmtDateDMY(dateRaw);
-  const notes=document.getElementById('eod-expnotes').value;
+  const cash=parseFloat(document.getElementById('eod-cash').value)||0;const card=parseFloat(document.getElementById('eod-card').value)||0;
+  const expenses=parseFloat(document.getElementById('eod-exp').value)||0;const till=parseFloat(document.getElementById('eod-till').value)||0;
+  const net=cash+card-expenses;const dateRaw=document.getElementById('eod-date').value;
+  const date=fmtDateDMY(dateRaw);const notes=document.getElementById('eod-expnotes').value;
   return{cash,card,expenses,till,net,date,dateRaw,notes};
 }
 function recalcEOD(){
-  const{cash,card,expenses,till,net,date}=getEODValues();
-  const f=n=>`${C()}${Number(n).toFixed(2)}`;
+  const{cash,card,expenses,till,net,date}=getEODValues();const f=n=>`${C()}${Number(n).toFixed(2)}`;
   document.getElementById('pr-name').textContent=(db.settings.name||'FLASHPOINT').toUpperCase();
   document.getElementById('pr-date').textContent=`DATE: ${date}`;
-  document.getElementById('pr-cash').textContent=f(cash);
-  document.getElementById('pr-card').textContent=f(card);
+  document.getElementById('pr-cash').textContent=f(cash);document.getElementById('pr-card').textContent=f(card);
   document.getElementById('pr-exp').textContent=expenses>0?`- ${f(expenses)}`:f(0);
-  document.getElementById('pr-net').textContent=f(net);
-  document.getElementById('pr-net').style.color=net<0?'#cc0000':'#000';
+  document.getElementById('pr-net').textContent=f(net);document.getElementById('pr-net').style.color=net<0?'#cc0000':'#000';
   document.getElementById('pr-till').textContent=f(till);
 }
 function saveEOD(){
-  const v=getEODValues();
-  if(!v.dateRaw){toast('Please select a date','warning');return;}
+  const v=getEODValues();if(!v.dateRaw){toast('Select a date','warning');return;}
   const rec={id:'EOD-'+Date.now(),dateRaw:v.dateRaw,date:v.date,cash:v.cash,card:v.card,expenses:v.expenses,till:v.till,net:v.net,notes:v.notes,savedAt:new Date().toISOString()};
-  db.eodRecords.unshift(rec);saveDB();renderEODHistory();
-  toast(`EOD saved for ${v.date}`);
+  db.eodRecords.unshift(rec);saveDB();renderEODHistory();toast(`EOD saved for ${v.date}`);
 }
 function renderEODHistory(){
   const el=document.getElementById('eod-history-list');
@@ -1709,35 +1737,67 @@ function renderEODHistory(){
       </div>
     </div>`).join('');
 }
-function loadEODRecord(id){
-  const r=db.eodRecords.find(x=>x.id===id);if(!r)return;
-  document.getElementById('eod-date').value=r.dateRaw;
-  document.getElementById('eod-cash').value=r.cash;
-  document.getElementById('eod-card').value=r.card;
-  document.getElementById('eod-exp').value=r.expenses;
-  document.getElementById('eod-till').value=r.till;
-  document.getElementById('eod-expnotes').value=r.notes||'';
-  recalcEOD();toast(`Loaded EOD for ${r.date}`);
+function loadEODRecord(id){const r=db.eodRecords.find(x=>x.id===id);if(!r)return;document.getElementById('eod-date').value=r.dateRaw;document.getElementById('eod-cash').value=r.cash;document.getElementById('eod-card').value=r.card;document.getElementById('eod-exp').value=r.expenses;document.getElementById('eod-till').value=r.till;document.getElementById('eod-expnotes').value=r.notes||'';recalcEOD();toast(`Loaded ${r.date}`);}
+function deleteEOD(id){if(!confirm('Delete?'))return;db.eodRecords=db.eodRecords.filter(x=>x.id!==id);saveDB();renderEODHistory();toast('Deleted','warning');}
+function printEOD(){const v=getEODValues();PDF.dl(PDF.eodPDF(v,db.settings),`eod-${v.dateRaw||'report'}.pdf`);toast('EOD PDF!');}
+function printEODRecord(id){const r=db.eodRecords.find(x=>x.id===id);if(!r)return;PDF.dl(PDF.eodPDF(r,db.settings),`eod-${r.dateRaw}.pdf`);toast('EOD PDF!');}
+function thermalPrintEODRecord(id){const r=db.eodRecords.find(x=>x.id===id);if(!r)return;document.getElementById('thermal-content').innerHTML=thermalBuildEOD(r);setTimeout(()=>window.print(),120);}
+
+// ══════════════════════════════════════
+//  IMPORT / EXPORT
+// ══════════════════════════════════════
+function promptImport(event){
+  const file=event.target.files[0];if(!file)return;event.target.value='';
+  const reader=new FileReader();
+  reader.onload=ev=>{try{
+    const data=JSON.parse(ev.target.result);
+    if(!data.products&&!data.sales){toast('Invalid backup file','error');return;}
+    pendingImportData=data;
+    document.getElementById('import-filename').textContent=`"${file.name}"`;
+    document.getElementById('import-fileinfo').textContent=`${(data.products||[]).length} products in file · ${db.products.length} in inventory`;
+    document.getElementById('mo-import').classList.add('on');
+  }catch(err){toast('Cannot read file','error');}};
+  reader.readAsText(file);
 }
-function deleteEOD(id){
-  if(!confirm('Delete this EOD record?'))return;
-  db.eodRecords=db.eodRecords.filter(x=>x.id!==id);
-  saveDB();renderEODHistory();toast('Deleted','warning');
+function doImport(mode){
+  closeMo('mo-import');if(!pendingImportData){toast('No file','error');return;}
+  const data=pendingImportData;pendingImportData=null;
+  if(mode==='replace'){
+    if(!confirm('⚠️ Delete ALL current data?'))return;
+    db={products:data.products||[],sales:data.sales||[],settings:data.settings||{...DEF},eodRecords:data.eodRecords||[]};
+    delete db.settings.tax;
+    db.products.forEach(p=>{if(!p.unit)p.unit='each';});
+    catOrder=db.settings.catOrder||[];
+    saveDB();renderInv();renderCats();renderProds();toast(`Replaced — ${(data.products||[]).length} products loaded`);return;
+  }
+  if(mode==='merge'){
+    const incoming=data.products||[];let added=0,skipped=0;
+    incoming.forEach(np=>{
+      const eByBC=np.barcode&&np.barcode.trim()&&db.products.some(p=>p.barcode&&p.barcode.trim()===np.barcode.trim());
+      const eById=!eByBC&&np.id&&db.products.some(p=>p.id===np.id);
+      if(eByBC||eById){skipped++;}else{db.products.push({...np,id:uid(),unit:np.unit||'each'});added++;}
+    });
+    saveDB();renderInv();renderCats();renderProds();toast(`✅ ${added} added, ${skipped} skipped`);return;
+  }
+  if(mode==='overwrite-products'){
+    const incoming=data.products||[];let added=0,updated=0;
+    incoming.forEach(np=>{
+      let idx=-1;if(np.barcode&&np.barcode.trim())idx=db.products.findIndex(p=>p.barcode&&p.barcode.trim()===np.barcode.trim());
+      if(idx===-1&&np.id)idx=db.products.findIndex(p=>p.id===np.id);
+      if(idx>-1){const ex=db.products[idx];db.products[idx]={...ex,name:np.name||ex.name,price:np.price!==undefined?np.price:ex.price,cost:np.cost!==undefined?np.cost:ex.cost,category:np.category||ex.category,emoji:np.emoji||ex.emoji,unit:np.unit||ex.unit||'each',desc:np.desc||ex.desc,barcode:np.barcode||ex.barcode};updated++;}
+      else{db.products.push({...np,id:uid(),unit:np.unit||'each'});added++;}
+    });
+    saveDB();renderInv();renderCats();renderProds();toast(`🔄 ${added} added, ${updated} updated`);return;
+  }
 }
-function printEOD(){
-  const v=getEODValues();
-  PDF.dl(PDF.eodPDF(v,db.settings),`eod-${v.dateRaw||'report'}.pdf`);
-  toast('EOD PDF downloaded!');
+function exportDB(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`flashpoint-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();toast('Backup exported!');
 }
-function printEODRecord(id){
-  const r=db.eodRecords.find(x=>x.id===id);if(!r)return;
-  PDF.dl(PDF.eodPDF(r,db.settings),`eod-${r.dateRaw}.pdf`);
-  toast('EOD PDF downloaded!');
-}
-function thermalPrintEODRecord(id){
-  const r=db.eodRecords.find(x=>x.id===id);if(!r)return;
-  document.getElementById('thermal-content').innerHTML=thermalBuildEOD(r);
-  setTimeout(()=>window.print(),120);
+function resetAll(){
+  if(!confirm('Delete ALL data?'))return;if(!confirm('Cannot be undone. Confirm?'))return;
+  db={products:[...SAMPLES.map(x=>({...x}))],sales:[],settings:{...DEF},eodRecords:[]};catOrder=[];
+  saveDB();basket=[];renderBasket();renderProds();renderCats();renderInv();toast('Reset done','warning');
 }
 
 // ══════════════════════════════════════
@@ -1745,45 +1805,16 @@ function thermalPrintEODRecord(id){
 // ══════════════════════════════════════
 function loadSet(){
   const s=db.settings;
-  document.getElementById('sn').value=s.name||'';
-  document.getElementById('sa').value=s.address||'';
-  document.getElementById('sph').value=s.phone||'';
-  document.getElementById('sem').value=s.email||'';
-  document.getElementById('sv2').value=s.vat||'';
-  document.getElementById('sf').value=s.footer||'';
+  document.getElementById('sn').value=s.name||'';document.getElementById('sa').value=s.address||'';
+  document.getElementById('sph').value=s.phone||'';document.getElementById('sem').value=s.email||'';
+  document.getElementById('sv2').value=s.vat||'';document.getElementById('sf').value=s.footer||'';
   document.getElementById('sc2').value=s.currency||'£';
   document.getElementById('scanner-speed').value=localStorage.getItem('hid-speed')||'80';
 }
 function saveSettings(){
-  db.settings={
-    name:document.getElementById('sn').value,
-    address:document.getElementById('sa').value,
-    phone:document.getElementById('sph').value,
-    email:document.getElementById('sem').value,
-    vat:document.getElementById('sv2').value,
-    footer:document.getElementById('sf').value,
-    currency:document.getElementById('sc2').value||'£',
-    // NO TAX field
-  };
-  const spd=document.getElementById('scanner-speed').value;
-  if(spd)localStorage.setItem('hid-speed',spd);
+  db.settings={name:document.getElementById('sn').value,address:document.getElementById('sa').value,phone:document.getElementById('sph').value,email:document.getElementById('sem').value,vat:document.getElementById('sv2').value,footer:document.getElementById('sf').value,currency:document.getElementById('sc2').value||'£',catOrder};
+  const spd=document.getElementById('scanner-speed').value;if(spd)localStorage.setItem('hid-speed',spd);
   saveDB();toast('Settings saved!');
-}
-
-// ══════════════════════════════════════
-//  EXPORT / RESET
-// ══════════════════════════════════════
-function exportDB(){
-  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`flashpoint-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();
-  toast('Backup exported!');
-}
-function resetAll(){
-  if(!confirm('Delete ALL data?'))return;
-  if(!confirm('Cannot be undone. Confirm?'))return;
-  db={products:[...SAMPLES.map(x=>({...x}))],sales:[],settings:{...DEF},eodRecords:[]};
-  saveDB();basket=[];renderBasket();renderProds();renderCats();renderInv();toast('Reset done','warning');
 }
 
 // ══════════════════════════════════════
@@ -1798,7 +1829,7 @@ document.getElementById('psearch').addEventListener('keydown',e=>{
   if(e.key==='Enter'){
     const q=e.target.value.trim();
     const p=db.products.find(x=>x.barcode===q);
-    if(p){addToBasket(p.id);e.target.value='';renderProds();}
+    if(p){if(isWeightProduct(p)){openWeightModal(p.id);e.target.value='';}else{addToBasket(p.id);e.target.value='';renderProds();}}
   }
 });
 document.getElementById('psearch').addEventListener('input',renderProds);
