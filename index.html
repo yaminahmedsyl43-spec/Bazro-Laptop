@@ -1339,7 +1339,7 @@ function completeSale(){
   db.sales.unshift(sale);saveDB();closeMo('mo-pay');curSaleId=id;
   basket=[];document.getElementById('disc').value='';
   renderBasket();renderProds();toast(`Sale complete! ${fmt(total)}`);showReceipt(sale);
-  if(payMethod==='cash')setTimeout(()=>openCashDrawer(true),250);
+  if(sale.payMethod==='cash')setTimeout(()=>openCashDrawer(true),250);
 }
 
 // ══════════════════════════════════════
