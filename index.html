@@ -391,6 +391,7 @@ tr:hover td{background:var(--surface2);}
           <div class="tr grand"><span>Total</span><span id="ttot">£0.00</span></div>
         </div>
         <button class="btn btn-p" onclick="openPay()">Pay Now</button>
+        <button class="btn btn-s" onclick="openCashDrawer()">Open Drawer</button>
         <button class="btn btn-o" onclick="openCustomProduct()">＋ Custom Item</button>
         <button class="btn btn-d" onclick="clearBasket()">🗑 Clear Basket</button>
       </div>
@@ -1338,6 +1339,7 @@ function completeSale(){
   db.sales.unshift(sale);saveDB();closeMo('mo-pay');curSaleId=id;
   basket=[];document.getElementById('disc').value='';
   renderBasket();renderProds();toast(`Sale complete! ${fmt(total)}`);showReceipt(sale);
+  if(payMethod==='cash')setTimeout(()=>openCashDrawer(true),250);
 }
 
 // ══════════════════════════════════════
@@ -1386,8 +1388,33 @@ function thermalPrint(type){
     frame.innerHTML=thermalBuildSale(sale);
   }else if(type==='eod'){
     frame.innerHTML=thermalBuildEOD(getEODValues());
+  }else if(type==='drawer'){
+    frame.innerHTML='<div style="font-size:1px;height:1px;overflow:hidden">&#27;&#112;&#0;&#25;&#250;</div>';
   }
   setTimeout(()=>window.print(),120);
+}
+
+// Cash drawer: works with Web Serial where supported, otherwise sends a drawer pulse through the thermal print path.
+const DRAWER_PULSE=new Uint8Array([27,112,0,25,250]);
+let drawerPort=null;
+async function openCashDrawer(silent=false){
+  try{
+    if('serial' in navigator){
+      if(!drawerPort)drawerPort=await navigator.serial.requestPort();
+      await drawerPort.open({baudRate:9600});
+      const writer=drawerPort.writable.getWriter();
+      await writer.write(DRAWER_PULSE);
+      writer.releaseLock();
+      await drawerPort.close();
+      if(!silent)toast('Cash drawer opened');
+      return;
+    }
+  }catch(err){
+    try{if(drawerPort&&drawerPort.readable)await drawerPort.close();}catch(e){}
+    drawerPort=null;
+  }
+  thermalPrint('drawer');
+  if(!silent)toast('Drawer command sent to printer');
 }
 function thermalBuildSale(sale){
   const s=db.settings;const f=n=>`${s.currency||'£'}${Number(n).toFixed(2)}`;
